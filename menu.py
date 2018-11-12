@@ -3,22 +3,21 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QGr
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
  
-class App(QDialog):
- 
-    def __init__(self):
-        super().__init__()
+class MainWindow(QDialog):
+    def __init__(self, parent = None):
+        super(MainWindow, self).__init__(parent)
         self.title = 'Main Menu'
         self.left = 500
         self.top = 500
-        self.width = 320
+        self.width = 500
         self.height = 100
-        self.initUI()
+        self.mainMenu()
  
-    def initUI(self):
+    def mainMenu(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
  
-        self.createHorizontalLayout()
+        self.mainLayout()
  
         windowLayout = QVBoxLayout()
         windowLayout.addWidget(self.horizontalGroupBox)
@@ -26,39 +25,76 @@ class App(QDialog):
  
         self.show()
  
-    def createHorizontalLayout(self):
+    def mainLayout(self):
         self.horizontalGroupBox = QGroupBox("Simply LED Test Module")
         layout = QHBoxLayout()
 
         initializeButton = QPushButton('Initialize', self)
-        initializeButton.setToolTip('Check Connections')
+        initializeButton.setToolTip('Checks Connections and Homes Controls')
         initializeButton.clicked.connect(self.initialize)
         layout.addWidget(initializeButton)
 
-        zeroButton = QPushButton('Zeroize', self)
-        zeroButton.setToolTip('Zeroize')
-        zeroButton.clicked.connect(self.zeroize)
-        layout.addWidget(zeroButton)
-
-        testButton = QPushButton('Begin Test',self)
-        testButton.setToolTip('Test Options')
-        testButton.clicked.connect(self.testOptions)
-        layout.addWidget(testButton)
+        self.testButton = QPushButton('Begin Test',self)
+        self.testButton.setToolTip('Test Options')
+        self.testButton.clicked.connect(self.testOptions)
+        self.testButton.setEnabled(False)
+        layout.addWidget(self.testButton)
  
         self.horizontalGroupBox.setLayout(layout)
  
- 
     @pyqtSlot()
     def initialize(self):
-        print('Checking Connections')
-
-    def zeroize(self):
-        print('Controls Zeroizing')
+        print('Checking Connections and Zeroizing Controls')
+        #TODO: intialize needs to be set by checking connections and homing controls
+        initialize = True
+        if initialize == True:
+            self.testButton.setEnabled(True)
+        else:
+            print('Initialize Failed. Check Connections')
 
     def testOptions(self):
         print('Select Test')
+        self.options = TestWindow()
+        self.options.show()
+        main.close()
+
+class TestWindow(QDialog):
+    def __init__(self, parent = None):
+        super(TestWindow, self).__init__(parent)
+        self.testTitle = 'Test Menu'
+        self.left = 500
+        self.top = 500
+        self.width = 500
+        self.height = 100
+        self.testMenu()
+
+    def testMenu(self):
+        self.setWindowTitle(self.testTitle)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.testLayout()
  
+        windowLayout = QVBoxLayout()
+        windowLayout.addWidget(self.horizontalGroupBox)
+        self.setLayout(windowLayout)
+ 
+        self.show()
+        
+    def testLayout(self):
+        self.horizontalGroupBox = QGroupBox("Select Test Mode")
+        layout = QHBoxLayout()
+
+        # testButtonOne = QPushButton('Test 1 text', self)
+        # testButtonOne.clicked.connect(self.testButtonOne)
+        # layout.addWidget(testButtonOne)
+
+        # testButtonTwo = QPushButton('Test 2 text',self)
+        # testButtonTwo.clicked.connect(self.testButtonTwo)
+        # layout.addWidget(testButtonTwo)
+ 
+        self.horizontalGroupBox.setLayout(layout)
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = App()
+    main = MainWindow()
     sys.exit(app.exec_())
