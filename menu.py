@@ -42,7 +42,6 @@ class MainWindow(QDialog):
  
         self.horizontalGroupBox.setLayout(layout)
  
-    @pyqtSlot()
     def initialize(self):
         print('Checking Connections and Zeroizing Controls')
         #TODO: intialize needs to be set by checking connections and homing controls
@@ -84,15 +83,28 @@ class TestWindow(QDialog):
         self.horizontalGroupBox = QGroupBox("Select Test Mode")
         layout = QHBoxLayout()
 
-        # testButtonOne = QPushButton('Test 1 text', self)
-        # testButtonOne.clicked.connect(self.testButtonOne)
-        # layout.addWidget(testButtonOne)
+        testButtonOne = QPushButton('Test 1 text', self)
+        testButtonOne.clicked.connect(self.testButtonOne)
+        layout.addWidget(testButtonOne)
 
-        # testButtonTwo = QPushButton('Test 2 text',self)
-        # testButtonTwo.clicked.connect(self.testButtonTwo)
-        # layout.addWidget(testButtonTwo)
+        testButtonTwo = QPushButton('Test 2 text',self)
+        testButtonTwo.clicked.connect(self.testButtonTwo)
+        layout.addWidget(testButtonTwo)
+
+        testButtonThree = QPushButton('Test 3 text')
+        testButtonThree.clicked.connect(self.testButtonThree)
+        layout.addWidget(testButtonThree)
  
         self.horizontalGroupBox.setLayout(layout)
+
+    def testButtonOne(self):
+        pass
+
+    def testButtonTwo(self):
+        pass
+
+    def testButtonThree(self):
+        print('yoyoyo')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
