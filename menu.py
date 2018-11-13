@@ -69,6 +69,7 @@ class TestWindow(QDialog):
     def __init__(self, parent = None):
         super(TestWindow, self).__init__(parent)
         self.testTitle = 'Test Menu'
+        self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
         self.top = 500
         self.width = 500
