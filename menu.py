@@ -7,6 +7,7 @@ class MainWindow(QDialog):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.title = 'Main Menu'
+        self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
         self.top = 500
         self.width = 500
