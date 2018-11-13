@@ -118,6 +118,20 @@ class TestWindow(QDialog):
     def testButtonThree(self):
         self.text.insertPlainText('yoyoyo\n')
 
+# class OutputWindow(QDialog, testType):
+#     def __init__(self, parent = None):
+#         super(OutputWindow, self).__init__(parent)
+#         self.testTitle = 'Output'
+#         self.setWindowIcon(QIcon('icon.png'))
+#         self.left = 500
+#         self.top = 500
+#         self.width = 500
+#         self.height = 250
+#         self.text = QTextEdit(self)
+#         self.text.setReadOnly(True)
+#         self.output()
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main = MainWindow()
