@@ -85,11 +85,11 @@ class MainWindow(QWidget):
     def testButtonThree(self):
         self.text.insertPlainText('yoyoyo\n')
  
-    #TODO: intialize variable needs to be set by checking connections and homing controls
+    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False)
     def initialize(self):
         self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
         initialize = True
-        if initialize == True:
+        if initialize:
             self.testButton.setEnabled(True)
             self.text.insertPlainText('Complete\n')
         else:
