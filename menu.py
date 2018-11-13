@@ -96,20 +96,27 @@ class MainWindow(QWidget):
             
     def testButtonOne(self):
         self.text.insertPlainText('I do something\n')
-        self.test = TestWindow()
+        self.test = TestWindow(1)
         self.test.show()
         main.close()
 
     def testButtonTwo(self):
         self.text.insertPlainText('I do something too\n')
+        self.test = TestWindow(2)
+        self.test.show()
+        main.close()
 
     def testButtonThree(self):
         self.text.insertPlainText('yoyoyo\n')
+        self.test = TestWindow(3)
+        self.test.show()
+        main.close()
 
 class TestWindow(QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, testType, parent = None):
         super(TestWindow, self).__init__(parent)
         self.testTitle = 'Test Menu'
+        self.testType = testType
         self.left = 500
         self.top = 500
         self.width = 800
@@ -132,7 +139,14 @@ class TestWindow(QDialog):
         self.show()
         
     def testLayout(self):
-        self.horizontalGroupBox = QGroupBox("Select Test Mode")
+        if self.testType == 1:
+            testTitle = 'Test Mode 1'
+        elif self.testType ==2:
+            testTitle = 'Test Mode 2'
+        elif self.testType ==3:
+            testTitle = 'Test Mode 3'
+            
+        self.horizontalGroupBox = QGroupBox(testTitle)
         layout = QHBoxLayout()
 
         self.startButton = QPushButton('Start', self)
