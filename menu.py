@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
  
@@ -11,6 +11,8 @@ class MainWindow(QDialog):
         self.top = 500
         self.width = 500
         self.height = 100
+        self.text = QTextEdit(self)
+        self.text.setReadOnly(True)
         self.mainMenu()
  
     def mainMenu(self):
@@ -21,6 +23,7 @@ class MainWindow(QDialog):
  
         windowLayout = QVBoxLayout()
         windowLayout.addWidget(self.horizontalGroupBox)
+        windowLayout.addWidget(self.text)
         self.setLayout(windowLayout)
  
         self.show()
@@ -42,20 +45,23 @@ class MainWindow(QDialog):
  
         self.horizontalGroupBox.setLayout(layout)
  
+    #TODO: intialize variable needs to be set by checking connections and homing controls
     def initialize(self):
-        print('Checking Connections and Zeroizing Controls')
-        #TODO: intialize needs to be set by checking connections and homing controls
+        self.updateText('Checking Connections and Zeroizing Controls')
         initialize = True
         if initialize == True:
             self.testButton.setEnabled(True)
         else:
-            print('Initialize Failed. Check Connections')
+            self.updateText('<b>Initialize Failed. Check Connections</b>')
 
     def testOptions(self):
-        print('Select Test')
+        self.updateText('Select Test')
         self.options = TestWindow()
         self.options.show()
         main.close()
+
+    def updateText(self, output):
+        self.text.insertPlainText(output + '\n')
 
 class TestWindow(QDialog):
     def __init__(self, parent = None):
@@ -65,6 +71,8 @@ class TestWindow(QDialog):
         self.top = 500
         self.width = 500
         self.height = 100
+        self.text = QTextEdit(self)
+        self.text.setReadOnly(True)
         self.testMenu()
 
     def testMenu(self):
@@ -75,6 +83,7 @@ class TestWindow(QDialog):
  
         windowLayout = QVBoxLayout()
         windowLayout.addWidget(self.horizontalGroupBox)
+        windowLayout.addWidget(self.text)
         self.setLayout(windowLayout)
  
         self.show()
@@ -104,7 +113,10 @@ class TestWindow(QDialog):
         pass
 
     def testButtonThree(self):
-        print('yoyoyo')
+        self.updateText('yoyoyo')
+
+    def updateText(self, output):
+        self.text.insertPlainText(output)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
