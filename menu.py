@@ -31,7 +31,7 @@ class MainWindow(QWidget):
         self.show()
 
     def testMenu(self):
-        self.title = 'Test Mode'
+        self.title = 'Test Menu'
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
@@ -115,12 +115,12 @@ class MainWindow(QWidget):
 class TestWindow(QDialog):
     def __init__(self, testType, parent = None):
         super(TestWindow, self).__init__(parent)
-        self.testTitle = 'Test Menu'
+        self.testTitle = 'Test Progress'
         self.testType = testType
         self.left = 500
-        self.top = 500
+        self.top = 200
         self.width = 800
-        self.height = 500
+        self.height = 1000
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
         self.testMenu()
@@ -145,7 +145,7 @@ class TestWindow(QDialog):
             testTitle = 'Test Mode 2'
         elif self.testType ==3:
             testTitle = 'Test Mode 3'
-            
+
         self.horizontalGroupBox = QGroupBox(testTitle)
         layout = QHBoxLayout()
 
@@ -163,10 +163,16 @@ class TestWindow(QDialog):
         self.continueButton = QPushButton('Continue Test', self)
         self.continueButton.setToolTip('Continue Test in Progress')
         self.continueButton.clicked.connect(self.continueTest)
-        self.horizontalGroupBox.setLayout(layout)
         layout.addWidget(self.continueButton)
         self.continueButton.hide()
-    
+
+        self.saveButton = QPushButton('Save Data', self)
+        self.saveButton.setToolTip('Opens File Directory')
+        self.saveButton.clicked.connect(self.saveFile)
+        self.saveButton.setEnabled(False)
+        layout.addWidget(self.saveButton)
+
+        self.horizontalGroupBox.setLayout(layout)
     def start(self):
         self.pauseButton.setEnabled(True)
         self.startButton.setEnabled(False)
@@ -181,6 +187,9 @@ class TestWindow(QDialog):
         self.continueButton.hide()
         self.pauseButton.show()
         self.text.insertPlainText('Test Continued\n')
+
+    def saveFile(self):
+        pass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
