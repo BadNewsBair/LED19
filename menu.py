@@ -110,10 +110,10 @@ class TestWindow(QDialog):
         self.horizontalGroupBox.setLayout(layout)
 
     def testButtonOne(self):
-        pass
+        self.text.insertPlainText('I do something\n')
 
     def testButtonTwo(self):
-        pass
+        self.text.insertPlainText('I do something too\n')
 
     def testButtonThree(self):
         self.text.insertPlainText('yoyoyo\n')
