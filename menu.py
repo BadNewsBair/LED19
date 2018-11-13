@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtCore import pyqtSlot
  
 class MainWindow(QDialog):
@@ -47,21 +47,22 @@ class MainWindow(QDialog):
  
     #TODO: intialize variable needs to be set by checking connections and homing controls
     def initialize(self):
-        self.updateText('Checking Connections and Zeroizing Controls')
+        self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
         initialize = True
         if initialize == True:
             self.testButton.setEnabled(True)
+            self.text.insertPlainText('Complete\n')
         else:
-            self.updateText('<b>Initialize Failed. Check Connections</b>')
-
+            red = QColor(255, 0, 0)
+            black = QColor(0, 0, 0)
+            self.text.setTextColor(red)
+            self.text.insertPlainText('Initialization Failed. Check Connections\n')
+            self.text.setTextColor(black)
+            
     def testOptions(self):
-        self.updateText('Select Test')
         self.options = TestWindow()
         self.options.show()
         main.close()
-
-    def updateText(self, output):
-        self.text.insertPlainText(output + '\n')
 
 class TestWindow(QDialog):
     def __init__(self, parent = None):
@@ -113,10 +114,7 @@ class TestWindow(QDialog):
         pass
 
     def testButtonThree(self):
-        self.updateText('yoyoyo')
-
-    def updateText(self, output):
-        self.text.insertPlainText(output)
+        self.text.insertPlainText('yoyoyo\n')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
