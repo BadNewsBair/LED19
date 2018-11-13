@@ -75,15 +75,18 @@ class MainWindow(QWidget):
         testLayout = QHBoxLayout()
         self.testGroupBox = QGroupBox('Select Test Mode')
 
-        testButtonOne = QPushButton('Test 1 text', self)
+        testButtonOne = QPushButton('Type 5', self)
+        testButtonOne.setToolTip('0 - 90 in 5 degree increments')
         testButtonOne.clicked.connect(self.testButtonOne)
         testLayout.addWidget(testButtonOne)
 
-        testButtonTwo = QPushButton('Test 2 text',self)
+        testButtonTwo = QPushButton('Type 2-4',self)
+        testButtonTwo.setToolTip('0 - 180 in 5 degree increments')
         testButtonTwo.clicked.connect(self.testButtonTwo)
         testLayout.addWidget(testButtonTwo)
 
-        testButtonThree = QPushButton('Test 3 text')
+        testButtonThree = QPushButton('Arbitrary Complete')
+        testButtonThree.setToolTip('0 - 355 in 5 degree increments')
         testButtonThree.clicked.connect(self.testButtonThree)
         testLayout.addWidget(testButtonThree)
 
@@ -108,19 +111,16 @@ class MainWindow(QWidget):
         self.horizontalGroupBox.hide()
             
     def testButtonOne(self):
-        self.text.insertPlainText('I do something\n')
         self.test = TestWindow(1)
         self.test.show()
         main.close()
 
     def testButtonTwo(self):
-        self.text.insertPlainText('I do something too\n')
         self.test = TestWindow(2)
         self.test.show()
         main.close()
 
     def testButtonThree(self):
-        self.text.insertPlainText('yoyoyo\n')
         self.test = TestWindow(3)
         self.test.show()
         main.close()
@@ -153,11 +153,14 @@ class TestWindow(QDialog):
         
     def testLayout(self):
         if self.testType == 1:
-            testTitle = 'Test Mode 1'
+            testTitle = 'Type 5 Light Test'
+            self.text.insertPlainText('Start test to begin Type 5 Test(0-90 in 5 degree increments)\n')
         elif self.testType ==2:
-            testTitle = 'Test Mode 2'
+            testTitle = 'Type 2-4 Light Test'
+            self.text.insertPlainText('Start test to begin Type 2-4 Test(0-180 in 5 degree increments)\n')
         elif self.testType ==3:
-            testTitle = 'Test Mode 3'
+            testTitle = 'Arbitrary Complete Test'
+            self.text.insertPlainText('Start test to begin Arbitrary Complete Test(0-355 in 5 degree increments)\n')
 
         self.horizontalGroupBox = QGroupBox(testTitle)
         layout = QHBoxLayout()
