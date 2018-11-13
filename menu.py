@@ -45,7 +45,7 @@ class MainWindow(QWidget):
         menuLayout = QVBoxLayout()
         picLayout = QVBoxLayout()
 
-        self.horizontalGroupBox = QGroupBox('Simply LED Test Module')    
+        self.horizontalGroupBox = QGroupBox('LED Test Module')    
 
         self.initializeButton = QPushButton('Initialize', self)
         self.initializeButton.setToolTip('Checks Connections and Homes Controls')
