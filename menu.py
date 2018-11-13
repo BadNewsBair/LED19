@@ -3,10 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtCore import pyqtSlot
  
-class MainWindow(QDialog):
+class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
-        self.title = 'Main Menu'
         self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
         self.top = 500
@@ -14,37 +13,77 @@ class MainWindow(QDialog):
         self.height = 250
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
+        self.windowLayout = QVBoxLayout()
         self.mainMenu()
  
     def mainMenu(self):
+        self.title = 'Main Menu'
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
  
         self.mainLayout()
  
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
-        windowLayout.addWidget(self.text)
-        self.setLayout(windowLayout)
+        
+        self.windowLayout.addWidget(self.horizontalGroupBox)
+        self.windowLayout.addWidget(self.text)
+        self.setLayout(self.windowLayout)
  
         self.show()
- 
-    def mainLayout(self):
-        self.horizontalGroupBox = QGroupBox("Simply LED Test Module")
-        layout = QHBoxLayout()
 
-        initializeButton = QPushButton('Initialize', self)
-        initializeButton.setToolTip('Checks Connections and Homes Controls')
-        initializeButton.clicked.connect(self.initialize)
-        layout.addWidget(initializeButton)
+    def testMenu(self):
+        self.title = 'Test Mode'
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.testLayout()
+ 
+        self.windowLayout.addWidget(self.testGroupBox)
+        self.windowLayout.addWidget(self.text)
+        self.setLayout(self.windowLayout)
+
+    def mainLayout(self):        
+        menuLayout = QHBoxLayout()
+        self.horizontalGroupBox = QGroupBox('Simply LED Test Module')    
+
+        self.initializeButton = QPushButton('Initialize', self)
+        self.initializeButton.setToolTip('Checks Connections and Homes Controls')
+        self.initializeButton.clicked.connect(self.initialize)
+        menuLayout.addWidget(self.initializeButton)
 
         self.testButton = QPushButton('Begin Test',self)
         self.testButton.setToolTip('Test Options')
         self.testButton.clicked.connect(self.testOptions)
         self.testButton.setEnabled(False)
-        layout.addWidget(self.testButton)
- 
-        self.horizontalGroupBox.setLayout(layout)
+        menuLayout.addWidget(self.testButton)
+
+        self.horizontalGroupBox.setLayout(menuLayout) 
+
+    def testLayout(self):
+        testLayout = QHBoxLayout()
+        self.testGroupBox = QGroupBox('Select Test Mode')
+
+        testButtonOne = QPushButton('Test 1 text', self)
+        testButtonOne.clicked.connect(self.testButtonOne)
+        testLayout.addWidget(testButtonOne)
+
+        testButtonTwo = QPushButton('Test 2 text',self)
+        testButtonTwo.clicked.connect(self.testButtonTwo)
+        testLayout.addWidget(testButtonTwo)
+
+        testButtonThree = QPushButton('Test 3 text')
+        testButtonThree.clicked.connect(self.testButtonThree)
+        testLayout.addWidget(testButtonThree)
+
+        self.testGroupBox.setLayout(testLayout)
+            
+    def testButtonOne(self):
+        self.text.insertPlainText('I do something\n')
+
+    def testButtonTwo(self):
+        self.text.insertPlainText('I do something too\n')
+
+    def testButtonThree(self):
+        self.text.insertPlainText('yoyoyo\n')
  
     #TODO: intialize variable needs to be set by checking connections and homing controls
     def initialize(self):
@@ -61,76 +100,8 @@ class MainWindow(QDialog):
             self.text.setTextColor(black)
             
     def testOptions(self):
-        self.options = TestWindow()
-        self.options.show()
-        main.close()
-
-class TestWindow(QDialog):
-    def __init__(self, parent = None):
-        super(TestWindow, self).__init__(parent)
-        self.testTitle = 'Test Menu'
-        self.setWindowIcon(QIcon('icon.png'))
-        self.left = 500
-        self.top = 500
-        self.width = 500
-        self.height = 250
-        self.text = QTextEdit(self)
-        self.text.setReadOnly(True)
         self.testMenu()
-
-    def testMenu(self):
-        self.setWindowTitle(self.testTitle)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.testLayout()
- 
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
-        windowLayout.addWidget(self.text)
-        self.setLayout(windowLayout)
- 
-        self.show()
-        
-    def testLayout(self):
-        self.horizontalGroupBox = QGroupBox("Select Test Mode")
-        layout = QHBoxLayout()
-
-        testButtonOne = QPushButton('Test 1 text', self)
-        testButtonOne.clicked.connect(self.testButtonOne)
-        layout.addWidget(testButtonOne)
-
-        testButtonTwo = QPushButton('Test 2 text',self)
-        testButtonTwo.clicked.connect(self.testButtonTwo)
-        layout.addWidget(testButtonTwo)
-
-        testButtonThree = QPushButton('Test 3 text')
-        testButtonThree.clicked.connect(self.testButtonThree)
-        layout.addWidget(testButtonThree)
- 
-        self.horizontalGroupBox.setLayout(layout)
-
-    def testButtonOne(self):
-        self.text.insertPlainText('I do something\n')
-
-    def testButtonTwo(self):
-        self.text.insertPlainText('I do something too\n')
-
-    def testButtonThree(self):
-        self.text.insertPlainText('yoyoyo\n')
-
-# class OutputWindow(QDialog, testType):
-#     def __init__(self, parent = None):
-#         super(OutputWindow, self).__init__(parent)
-#         self.testTitle = 'Output'
-#         self.setWindowIcon(QIcon('icon.png'))
-#         self.left = 500
-#         self.top = 500
-#         self.width = 500
-#         self.height = 250
-#         self.text = QTextEdit(self)
-#         self.text.setReadOnly(True)
-#         self.output()
-
+        self.horizontalGroupBox.hide()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
