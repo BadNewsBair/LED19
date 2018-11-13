@@ -10,7 +10,7 @@ class MainWindow(QWidget):
         self.left = 500
         self.top = 500
         self.width = 500
-        self.height = 250
+        self.height = 500
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
         self.windowLayout = QVBoxLayout()
@@ -75,16 +75,7 @@ class MainWindow(QWidget):
         testLayout.addWidget(testButtonThree)
 
         self.testGroupBox.setLayout(testLayout)
-            
-    def testButtonOne(self):
-        self.text.insertPlainText('I do something\n')
 
-    def testButtonTwo(self):
-        self.text.insertPlainText('I do something too\n')
-
-    def testButtonThree(self):
-        self.text.insertPlainText('yoyoyo\n')
- 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False)
     def initialize(self):
         self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
@@ -102,6 +93,80 @@ class MainWindow(QWidget):
     def testOptions(self):
         self.testMenu()
         self.horizontalGroupBox.hide()
+            
+    def testButtonOne(self):
+        self.text.insertPlainText('I do something\n')
+        self.test = TestWindow()
+        self.test.show()
+        main.close()
+
+    def testButtonTwo(self):
+        self.text.insertPlainText('I do something too\n')
+
+    def testButtonThree(self):
+        self.text.insertPlainText('yoyoyo\n')
+
+class TestWindow(QDialog):
+    def __init__(self, parent = None):
+        super(TestWindow, self).__init__(parent)
+        self.testTitle = 'Test Menu'
+        self.left = 500
+        self.top = 500
+        self.width = 800
+        self.height = 500
+        self.text = QTextEdit(self)
+        self.text.setReadOnly(True)
+        self.testMenu()
+
+    def testMenu(self):
+        self.setWindowTitle(self.testTitle)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.testLayout()
+ 
+        windowLayout = QVBoxLayout()
+        windowLayout.addWidget(self.horizontalGroupBox)
+        windowLayout.addWidget(self.text)
+        self.setLayout(windowLayout)
+ 
+        self.show()
+        
+    def testLayout(self):
+        self.horizontalGroupBox = QGroupBox("Select Test Mode")
+        layout = QHBoxLayout()
+
+        self.startButton = QPushButton('Start', self)
+        self.startButton.setToolTip('Begin Test')
+        self.startButton.clicked.connect(self.start)
+        layout.addWidget(self.startButton)
+
+        self.pauseButton = QPushButton('Pause Test',self)
+        self.pauseButton.setToolTip('Pause Test in Progress')
+        self.pauseButton.clicked.connect(self.pause)
+        self.pauseButton.setEnabled(False)
+        layout.addWidget(self.pauseButton)
+
+        self.continueButton = QPushButton('Continue Test', self)
+        self.continueButton.setToolTip('Continue Test in Progress')
+        self.continueButton.clicked.connect(self.continueTest)
+        self.horizontalGroupBox.setLayout(layout)
+        layout.addWidget(self.continueButton)
+        self.continueButton.hide()
+    
+    def start(self):
+        self.pauseButton.setEnabled(True)
+        self.startButton.setEnabled(False)
+        self.text.insertPlainText('Test Start\n')
+    
+    def pause(self):
+        self.pauseButton.hide()
+        self.continueButton.show()
+        self.text.insertPlainText('Test Paused\n')
+
+    def continueTest(self):
+        self.continueButton.hide()
+        self.pauseButton.show()
+        self.text.insertPlainText('Test Continued\n')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
