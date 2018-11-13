@@ -11,7 +11,7 @@ class MainWindow(QDialog):
         self.left = 500
         self.top = 500
         self.width = 500
-        self.height = 100
+        self.height = 250
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
         self.mainMenu()
@@ -73,7 +73,7 @@ class TestWindow(QDialog):
         self.left = 500
         self.top = 500
         self.width = 500
-        self.height = 100
+        self.height = 250
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
         self.testMenu()
