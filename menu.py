@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtSlot
  
 class MainWindow(QWidget):
@@ -8,8 +8,8 @@ class MainWindow(QWidget):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
-        self.top = 500
-        self.width = 500
+        self.top = 200
+        self.width = 1000
         self.height = 500
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
@@ -25,7 +25,7 @@ class MainWindow(QWidget):
  
         
         self.windowLayout.addWidget(self.horizontalGroupBox)
-        self.windowLayout.addWidget(self.text)
+        
         self.setLayout(self.windowLayout)
  
         self.show()
@@ -42,7 +42,9 @@ class MainWindow(QWidget):
         self.setLayout(self.windowLayout)
 
     def mainLayout(self):        
-        menuLayout = QHBoxLayout()
+        menuLayout = QVBoxLayout()
+        picLayout = QVBoxLayout()
+
         self.horizontalGroupBox = QGroupBox('Simply LED Test Module')    
 
         self.initializeButton = QPushButton('Initialize', self)
@@ -56,7 +58,18 @@ class MainWindow(QWidget):
         self.testButton.setEnabled(False)
         menuLayout.addWidget(self.testButton)
 
-        self.horizontalGroupBox.setLayout(menuLayout) 
+        menuLayout.addWidget(self.text)
+
+        image = QPixmap('testDevice.jpg')
+        lbl = QLabel(self)
+        lbl.setPixmap(image)
+        picLayout.addWidget(lbl)     
+
+        fullLayout = QHBoxLayout()
+        fullLayout.addLayout(menuLayout)
+        fullLayout.addLayout(picLayout)
+
+        self.horizontalGroupBox.setLayout(fullLayout) 
 
     def testLayout(self):
         testLayout = QHBoxLayout()
@@ -119,7 +132,7 @@ class TestWindow(QDialog):
         self.testType = testType
         self.left = 500
         self.top = 200
-        self.width = 800
+        self.width = 1000
         self.height = 1000
         self.text = QTextEdit(self)
         self.text.setReadOnly(True)
