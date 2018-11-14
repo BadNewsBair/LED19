@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QLabel, QTextEdit
 from PyQt5.QtGui import QIcon, QPixmap
 
- 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -22,12 +21,9 @@ class MainWindow(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
  
         self.mainLayout()
- 
-        
         self.windowLayout.addWidget(self.horizontalGroupBox)
         
         self.setLayout(self.windowLayout)
- 
         self.show()
 
     def testMenu(self):
@@ -189,6 +185,7 @@ class TestWindow(QDialog):
         layout.addWidget(self.saveButton)
 
         self.horizontalGroupBox.setLayout(layout)
+        
     def start(self):
         self.pauseButton.setEnabled(True)
         self.startButton.setEnabled(False)
