@@ -1,6 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QLabel, QTextEdit
-from PyQt5.QtGui import QIcon, QPixmap
+
+from PyQt5.QtGui import QIcon, QPixmap, QColor
+from PyQt5.QtWidgets import (QApplication, QDialog, QGroupBox, QHBoxLayout,
+                             QLabel, QPushButton, QTextEdit, QVBoxLayout,
+                             QWidget)
+
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
@@ -54,6 +58,24 @@ class MainWindow(QWidget):
         self.testButton.setEnabled(False)
         menuLayout.addWidget(self.testButton)
 
+        self.testButtonOne = QPushButton('Test Type 5', self)
+        self.testButtonOne.setToolTip('0 - 90 in 5 degree increments')
+        self.testButtonOne.clicked.connect(self.testType5)
+        self.testButtonOne.hide()
+        menuLayout.addWidget(self.testButtonOne)
+
+        self.testButtonTwo = QPushButton('Test Type 2-4',self)
+        self.testButtonTwo.setToolTip('0 - 180 in 5 degree increments')
+        self.testButtonTwo.clicked.connect(self.testType24)
+        self.testButtonTwo.hide()
+        menuLayout.addWidget(self.testButtonTwo)
+
+        self.testButtonThree = QPushButton('Test Arbitrary Complete')
+        self.testButtonThree.setToolTip('0 - 355 in 5 degree increments')
+        self.testButtonThree.clicked.connect(self.testComplete)
+        self.testButtonThree.hide()
+        menuLayout.addWidget(self.testButtonThree)
+
         menuLayout.addWidget(self.text)
 
         image = QPixmap('testDevice.jpg')
@@ -67,27 +89,6 @@ class MainWindow(QWidget):
 
         self.horizontalGroupBox.setLayout(fullLayout) 
 
-    def testLayout(self):
-        testLayout = QHBoxLayout()
-        self.testGroupBox = QGroupBox('Select Test Mode')
-
-        testButtonOne = QPushButton('Type 5', self)
-        testButtonOne.setToolTip('0 - 90 in 5 degree increments')
-        testButtonOne.clicked.connect(self.testButtonOne)
-        testLayout.addWidget(testButtonOne)
-
-        testButtonTwo = QPushButton('Type 2-4',self)
-        testButtonTwo.setToolTip('0 - 180 in 5 degree increments')
-        testButtonTwo.clicked.connect(self.testButtonTwo)
-        testLayout.addWidget(testButtonTwo)
-
-        testButtonThree = QPushButton('Arbitrary Complete')
-        testButtonThree.setToolTip('0 - 355 in 5 degree increments')
-        testButtonThree.clicked.connect(self.testButtonThree)
-        testLayout.addWidget(testButtonThree)
-
-        self.testGroupBox.setLayout(testLayout)
-
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False)
     def initialize(self):
         self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
@@ -99,24 +100,29 @@ class MainWindow(QWidget):
             red = QColor(255, 0, 0)
             black = QColor(0, 0, 0)
             self.text.setTextColor(red)
-            self.text.insertPlainText('Initialization Failed. Check Connections\n')
+            self.text.insertPlainText('Initialization Failed. Check connections and try again\n')
             self.text.setTextColor(black)
             
     def testOptions(self):
-        self.testMenu()
-        self.horizontalGroupBox.hide()
+        self.initializeButton.hide()
+        self.testButton.hide()
+        self.testButtonOne.show()
+        self.testButtonTwo.show()
+        self.testButtonThree.show()
+        self.text.insertPlainText('Select Test Mode\n')
+
             
-    def testButtonOne(self):
+    def testType5(self):
         self.test = TestWindow(1)
         self.test.show()
         main.close()
 
-    def testButtonTwo(self):
+    def testType24(self):
         self.test = TestWindow(2)
         self.test.show()
         main.close()
 
-    def testButtonThree(self):
+    def testComplete(self):
         self.test = TestWindow(3)
         self.test.show()
         main.close()
@@ -185,7 +191,7 @@ class TestWindow(QDialog):
         layout.addWidget(self.saveButton)
 
         self.horizontalGroupBox.setLayout(layout)
-        
+
     def start(self):
         self.pauseButton.setEnabled(True)
         self.startButton.setEnabled(False)
