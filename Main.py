@@ -132,6 +132,7 @@ class TestWindow(QDialog):
         super(TestWindow, self).__init__(parent)
         self.testTitle = 'Test Progress'
         self.testType = testType
+        self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
         self.top = 200
         self.width = 1000
