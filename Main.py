@@ -52,21 +52,15 @@ class MainWindow(QWidget):
         self.initializeButton.clicked.connect(self.initialize)
         menuLayout.addWidget(self.initializeButton)
 
-        self.testButton = QPushButton('Begin Test',self)
-        self.testButton.setToolTip('Test Options')
-        self.testButton.clicked.connect(self.testOptions)
-        self.testButton.setEnabled(False)
-        menuLayout.addWidget(self.testButton)
-
-        self.testButtonOne = QPushButton('Test Type 5', self)
-        self.testButtonOne.setToolTip('0 - 90 in 5 degree increments')
-        self.testButtonOne.clicked.connect(self.testType5)
+        self.testButtonOne = QPushButton('Test Type 2-4', self)
+        self.testButtonOne.setToolTip('0 - 180 in 5 degree increments')
+        self.testButtonOne.clicked.connect(self.testType24)
         self.testButtonOne.hide()
         menuLayout.addWidget(self.testButtonOne)
 
-        self.testButtonTwo = QPushButton('Test Type 2-4',self)
-        self.testButtonTwo.setToolTip('0 - 180 in 5 degree increments')
-        self.testButtonTwo.clicked.connect(self.testType24)
+        self.testButtonTwo = QPushButton('Test Type 5',self)
+        self.testButtonTwo.setToolTip('0 - 90 in 5 degree increments')
+        self.testButtonTwo.clicked.connect(self.testType5)
         self.testButtonTwo.hide()
         menuLayout.addWidget(self.testButtonTwo)
 
@@ -94,23 +88,18 @@ class MainWindow(QWidget):
         self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
         initialize = True
         if initialize:
-            self.testButton.setEnabled(True)
             self.text.insertPlainText('Complete\n')
+            self.initializeButton.hide()
+            self.testButtonOne.show()
+            self.testButtonTwo.show()
+            self.testButtonThree.show()
+            self.text.insertPlainText('Select Test Mode\n')
         else:
             red = QColor(255, 0, 0)
             black = QColor(0, 0, 0)
             self.text.setTextColor(red)
             self.text.insertPlainText('Initialization Failed. Check connections and try again\n')
             self.text.setTextColor(black)
-            
-    def testOptions(self):
-        self.initializeButton.hide()
-        self.testButton.hide()
-        self.testButtonOne.show()
-        self.testButtonTwo.show()
-        self.testButtonThree.show()
-        self.text.insertPlainText('Select Test Mode\n')
-
             
     def testType5(self):
         self.test = TestWindow(1)
