@@ -14,6 +14,7 @@ class MainWindow(QWidget):
         self.width = 1000
         self.height = 500
         self.text = QTextEdit(self)
+        self.text.setFontPointSize(12)
         self.text.setReadOnly(True)
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
@@ -44,7 +45,7 @@ class MainWindow(QWidget):
         menuLayout = QVBoxLayout()
         picLayout = QVBoxLayout()
 
-        self.horizontalGroupBox = QGroupBox('LED Test Module')    
+        self.horizontalGroupBox = QGroupBox('LED Test Module')  
 
         self.initializeButton = QPushButton('Initialize', self)
         self.initializeButton.setToolTip('Checks Connections and Homes Controls')
@@ -82,7 +83,7 @@ class MainWindow(QWidget):
 
         self.horizontalGroupBox.setLayout(fullLayout) 
 
-    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False)
+    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
         self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
         initialize = True
@@ -126,6 +127,7 @@ class TestWindow(QDialog):
         self.width = 1000
         self.height = 1000
         self.text = QTextEdit(self)
+        self.text.setFontPointSize(12)
         self.text.setReadOnly(True)
         self.testMenu()
 
