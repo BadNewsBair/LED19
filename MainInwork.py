@@ -16,11 +16,16 @@ class MainWindow(QWidget):
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
         self.startButton = self.startTestButton()
-        self.text = QTextEdit(self)
-        self.text.setFontPointSize(12)
-        self.text.setReadOnly(True)
+        self.textOutput = self.text()
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
+
+    def text(self):
+        text = QTextEdit(self)
+        text.setFontPointSize(12)
+        text.setReadOnly(True)
+        text.verticalScrollBar().minimum()
+        return text
  
     def mainMenu(self):
         self.title = 'Main Menu'
@@ -44,7 +49,7 @@ class MainWindow(QWidget):
         menuLayout.addWidget(self.comboLabel)
         menuLayout.addWidget(self.combo)
         menuLayout.addWidget(self.startButton)
-        menuLayout.addWidget(self.text)  
+        menuLayout.addWidget(self.textOutput)  
 
         image = QPixmap('testDevice.jpg')
         lbl = QLabel(self)
@@ -86,17 +91,17 @@ class MainWindow(QWidget):
 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
-        self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
-        initialize = True
+        self.textOutput.insertPlainText('Checking Connections and Zeroizing Controls\n')
+        initialize = False
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
         else:
             red = QColor(255, 0, 0)
             black = QColor(0, 0, 0)
-            self.text.setTextColor(red)
-            self.text.insertPlainText('Initialization Failed. Check connections and try again\n')
-            self.text.setTextColor(black)
+            self.textOutput.setTextColor(red)
+            self.textOutput.insertPlainText('Initialization Failed. Check connections and try again\n')
+            self.textOutput.setTextColor(black)
 
     def startTest(self):
         pass
