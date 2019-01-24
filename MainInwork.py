@@ -12,6 +12,8 @@ class MainWindow(QWidget):
         self.top = 200
         self.width = 1200
         self.height = 800
+        self.red = QColor(255, 0, 0)
+        self.black = QColor(0, 0, 0)
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -19,13 +21,6 @@ class MainWindow(QWidget):
         self.textOutput = self.text()
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
-
-    def text(self):
-        text = QTextEdit(self)
-        text.setFontPointSize(12)
-        text.setReadOnly(True)
-        text.verticalScrollBar().minimum()
-        return text
  
     def mainMenu(self):
         self.title = 'Main Menu'
@@ -79,7 +74,6 @@ class MainWindow(QWidget):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
-        
         return initButton
 
     def startTestButton(self):
@@ -89,19 +83,27 @@ class MainWindow(QWidget):
         startButton.setEnabled(False)
         return startButton
 
+    def text(self):
+        text = QTextEdit(self)
+        text.setFontPointSize(11)
+        text.setReadOnly(True)
+        return text
+
+    def log(self, output):
+        self.textOutput.insertPlainText(output)
+        self.textOutput.moveCursor(QTextCursor.End)
+
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
-        self.textOutput.insertPlainText('Checking Connections and Zeroizing Controls\n')
-        initialize = True
+        self.log('Checking Connections and Zeroizing Controls\n')
+        initialize = True #This line is for testing purposes ONLY, remove after initialize controls function created
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
         else:
-            red = QColor(255, 0, 0)
-            black = QColor(0, 0, 0)
-            self.textOutput.setTextColor(red)
-            self.textOutput.insertPlainText('Initialization Failed. Check connections and try again\n')
-            self.textOutput.setTextColor(black)
+            self.textOutput.setTextColor(self.red)
+            self.log('Initialization Failed. Check connections and try again\n')
+            self.textOutput.setTextColor(self.black)
 
     def startTest(self):
         pass
