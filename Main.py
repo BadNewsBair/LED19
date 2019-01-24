@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from PyQt5.QtWidgets import (QApplication, QDialog, QGroupBox, QHBoxLayout,
                              QLabel, QPushButton, QTextEdit, QVBoxLayout,
-                             QWidget)
+                             QWidget, QComboBox)
 
 
 class MainWindow(QWidget):
@@ -69,6 +69,12 @@ class MainWindow(QWidget):
         self.testButtonThree.clicked.connect(self.testComplete)
         self.testButtonThree.hide()
         menuLayout.addWidget(self.testButtonThree)
+
+        self.combo = QComboBox()
+        self.combo.addItem('Test 1')
+        self.combo.addItem('Test 2')
+        self.combo.addItem('Test 3')
+        menuLayout.addWidget(self.combo) 
 
         menuLayout.addWidget(self.text)
 
