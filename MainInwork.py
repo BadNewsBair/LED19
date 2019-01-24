@@ -14,11 +14,14 @@ class MainWindow(QWidget):
         self.height = 800
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
+
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
         self.startButton = self.startTestButton()
-        self.textOutput = self.text()
+        self.textInput = self.wattageInput()
+        self.textOutput = self.outputText()
+        
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
  
@@ -38,12 +41,14 @@ class MainWindow(QWidget):
         picLayout = QVBoxLayout()
 
         self.horizontalGroupBox = QGroupBox('LED Test Module')
-
         
         menuLayout.addWidget(self.initButton)
+        
         menuLayout.addWidget(self.comboLabel)
-        menuLayout.addWidget(self.combo)
+        menuLayout.addWidget(self.combo) 
+        menuLayout.addWidget(self.textInput)
         menuLayout.addWidget(self.startButton)
+        menuLayout.addStretch()
         menuLayout.addWidget(self.textOutput)  
 
         image = QPixmap('testDevice.jpg')
@@ -61,6 +66,7 @@ class MainWindow(QWidget):
         comboLabel = QLabel()
         comboLabel.setText('--Select Test Type--')
         comboLabel.setAlignment(Qt.AlignCenter)
+        comboLabel.hide()
         return comboLabel
 
     def comboBox(self):
@@ -68,12 +74,14 @@ class MainWindow(QWidget):
         combo.addItem('Test 1', 1)
         combo.addItem('Test 2', 2)
         combo.addItem('Test 3', 3)
+        combo.hide()
         return combo
 
     def initializeButton(self):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
+        initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         return initButton
 
     def startTestButton(self):
@@ -81,13 +89,20 @@ class MainWindow(QWidget):
         startButton.setToolTip('Initialize Controls must be complete prior to test start')
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
+        startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        startButton.hide()
         return startButton
 
-    def text(self):
-        text = QTextEdit(self)
-        text.setFontPointSize(11)
-        text.setReadOnly(True)
-        return text
+    def outputText(self):
+        outputText = QTextEdit(self)
+        outputText.setFontPointSize(11)
+        outputText.setReadOnly(True)
+        return outputText
+
+    def wattageInput(self):
+        inputText = QLineEdit(self)
+        inputText.hide()
+        return inputText
 
     def log(self, output):
         self.textOutput.insertPlainText(output)
@@ -100,6 +115,11 @@ class MainWindow(QWidget):
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
+            self.initButton.hide()
+            self.comboLabel.show()
+            self.combo.show()
+            self.textInput.show()
+            self.startButton.show()
         else:
             self.textOutput.setTextColor(self.red)
             self.log('Initialization Failed. Check connections and try again\n')
