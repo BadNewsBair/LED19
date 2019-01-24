@@ -92,7 +92,7 @@ class MainWindow(QWidget):
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
         self.textOutput.insertPlainText('Checking Connections and Zeroizing Controls\n')
-        initialize = False
+        initialize = True
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
