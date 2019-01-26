@@ -15,15 +15,22 @@ class MainWindow(QWidget):
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
         self.font = QFont()
-        self.font.setPointSize(12)
+        self.font.setPointSize(18)
 
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
-        self.startButton = self.startTestButton()
-        self.textInput = self.wattageInput()
+       
+        self.wattLabel = self.wattageLabel()
+        self.watttInput = self.wattageInput()
+        self.disLabel = self.distanceLabel()
+        self.disInput = self.distanceInput()
         self.textOutput = self.outputText()
         
+        self.startButton = self.startTestButton()
+        self.pauseButton = self.pauseTestButton()
+        self.continueButton = self.continueTestButton()
+
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
  
@@ -47,10 +54,14 @@ class MainWindow(QWidget):
         
         menuLayout.addWidget(self.initButton)
         menuLayout.addLayout(gridLayout)
-        gridLayout.addWidget(self.comboLabel)
-        gridLayout.addWidget(self.combo) 
-        gridLayout.addWidget(self.textInput)
+        gridLayout.addWidget(self.comboLabel, 0,0)
+        gridLayout.addWidget(self.combo, 0,1)
+        gridLayout.addWidget(self.wattLabel, 1,0)
+        gridLayout.addWidget(self.watttInput, 1,1)
+        gridLayout.addWidget(self.disLabel, 2, 0)
+        gridLayout.addWidget(self.disInput, 2,1)
         gridLayout.addWidget(self.startButton)
+        gridLayout.addWidget(self.pauseButton)
 
         self.image = QPixmap('testDevice.jpg')
         self.lbl = QLabel(self)
@@ -67,7 +78,7 @@ class MainWindow(QWidget):
     def comboBoxLabel(self):
         comboLabel = QLabel()
         comboLabel.setText('--Select Test Type--')
-        comboLabel.setAlignment(Qt.AlignCenter)
+        comboLabel.setFont(self.font)
         return comboLabel
 
     def comboBox(self):
@@ -82,7 +93,8 @@ class MainWindow(QWidget):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
-        initButton.setFont(self.font)     
+        initButton.setFont(self.font) 
+        initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
         return initButton
 
     def startTestButton(self):
@@ -94,6 +106,21 @@ class MainWindow(QWidget):
         startButton.setFont(self.font)
         return startButton
 
+    def pauseTestButton(self):
+        pauseButton = QPushButton('Pause Test')
+        pauseButton.setToolTip('Pause Test')
+        pauseButton.clicked.connect(self.pauseTest)
+        pauseButton.setEnabled(False)
+        pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        pauseButton.setFont(self.font)
+        return pauseButton
+
+    def continueTestButton(self):
+        continueButton = QPushButton('Continue Test')
+        continueButton.setToolTip('Continue Test')
+        continueButton.clicked.connect(self.continueTest)
+        return continueButton
+
     def outputText(self):
         outputText = QTextEdit(self)
         outputText.setFontPointSize(11)
@@ -101,9 +128,27 @@ class MainWindow(QWidget):
         outputText.hide()
         return outputText
 
+    def wattageLabel(self):
+        wattageLabel = QLabel()
+        wattageLabel.setText('--Input Wattage--')
+        wattageLabel.setFont(self.font)
+        return wattageLabel
+
     def wattageInput(self):
         inputText = QLineEdit(self)
+        inputText.setPlaceholderText('Input Wattage')
         return inputText
+
+    def distanceLabel(self):
+        distanceLabel = QLabel()
+        distanceLabel.setText('--Input Distance--')
+        distanceLabel.setFont(self.font)
+        return distanceLabel
+
+    def distanceInput(self):
+        text = QLineEdit(self)
+        text.setPlaceholderText('Input Distance')
+        return text
 
     def log(self, output):
         self.textOutput.insertPlainText(output)
@@ -124,6 +169,12 @@ class MainWindow(QWidget):
             self.textOutput.setTextColor(self.black)
 
     def startTest(self):
+        pass
+
+    def pauseTest(self):
+        pass
+
+    def continueTest(self):
         pass
 
 if __name__ == '__main__':
