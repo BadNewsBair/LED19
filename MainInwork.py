@@ -14,6 +14,8 @@ class MainWindow(QWidget):
         self.height = 800
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
+        self.font = QFont()
+        self.font.setPointSize(12)
 
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
@@ -38,23 +40,23 @@ class MainWindow(QWidget):
 
     def mainLayout(self): 
         menuLayout = QVBoxLayout()
+        gridLayout = QGridLayout()
         picLayout = QVBoxLayout()
 
         self.horizontalGroupBox = QGroupBox('LED Test Module')
         
         menuLayout.addWidget(self.initButton)
-        
-        menuLayout.addWidget(self.comboLabel)
-        menuLayout.addWidget(self.combo) 
-        menuLayout.addWidget(self.textInput)
-        menuLayout.addWidget(self.startButton)
-        menuLayout.addStretch()
-        menuLayout.addWidget(self.textOutput)  
+        menuLayout.addLayout(gridLayout)
+        gridLayout.addWidget(self.comboLabel)
+        gridLayout.addWidget(self.combo) 
+        gridLayout.addWidget(self.textInput)
+        gridLayout.addWidget(self.startButton)
 
-        image = QPixmap('testDevice.jpg')
-        lbl = QLabel(self)
-        lbl.setPixmap(image)
-        picLayout.addWidget(lbl)     
+        self.image = QPixmap('testDevice.jpg')
+        self.lbl = QLabel(self)
+        self.lbl.setPixmap(self.image)
+        picLayout.addWidget(self.lbl)
+        picLayout.addWidget(self.textOutput)     
 
         fullLayout = QHBoxLayout()
         fullLayout.addLayout(menuLayout)
@@ -66,22 +68,21 @@ class MainWindow(QWidget):
         comboLabel = QLabel()
         comboLabel.setText('--Select Test Type--')
         comboLabel.setAlignment(Qt.AlignCenter)
-        comboLabel.hide()
         return comboLabel
 
     def comboBox(self):
         combo = QComboBox()
+        combo.setFont(self.font)
         combo.addItem('Test 1', 1)
         combo.addItem('Test 2', 2)
         combo.addItem('Test 3', 3)
-        combo.hide()
         return combo
 
     def initializeButton(self):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
-        initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        initButton.setFont(self.font)     
         return initButton
 
     def startTestButton(self):
@@ -90,18 +91,18 @@ class MainWindow(QWidget):
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
         startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        startButton.hide()
+        startButton.setFont(self.font)
         return startButton
 
     def outputText(self):
         outputText = QTextEdit(self)
         outputText.setFontPointSize(11)
         outputText.setReadOnly(True)
+        outputText.hide()
         return outputText
 
     def wattageInput(self):
         inputText = QLineEdit(self)
-        inputText.hide()
         return inputText
 
     def log(self, output):
@@ -115,11 +116,8 @@ class MainWindow(QWidget):
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
-            self.initButton.hide()
-            self.comboLabel.show()
-            self.combo.show()
-            self.textInput.show()
-            self.startButton.show()
+            self.lbl.hide()
+            self.textOutput.show()
         else:
             self.textOutput.setTextColor(self.red)
             self.log('Initialization Failed. Check connections and try again\n')
