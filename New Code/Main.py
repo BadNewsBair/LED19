@@ -75,10 +75,10 @@ class MainWindow(QWidget):
         gridLayout.addWidget(self.disInput, 5, 1)
         gridLayout.addWidget(self.startButton, 6, 0, 1, 2)
         gridLayout.addWidget(self.pauseButton, 7, 0, 1, 2)
-        gridLayout.addWidget(self.saveButton, 8, 0, 1, 2)
-        gridLayout.addWidget(self.endInfo, 9, 0, 1, 0)
+        gridLayout.addWidget(self.continueButton, 8, 0, 1, 2)
+        gridLayout.addWidget(self.saveButton, 9, 0, 1, 2)
+        gridLayout.addWidget(self.endInfo, 10, 0, 1, 0)
         
-
         picLayout.addWidget(self.mainLabel)
         picLayout.addWidget(self.textOutput)     
 
@@ -132,6 +132,9 @@ class MainWindow(QWidget):
         continueButton = QPushButton('Continue Test')
         continueButton.setToolTip('Continue Test')
         continueButton.clicked.connect(self.continueTest)
+        continueButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        continueButton.setFont(self.font15)
+        continueButton.hide()
         return continueButton
 
     def saveDataButton(self):
@@ -182,12 +185,12 @@ class MainWindow(QWidget):
         return distance
 
     def log(self, output):
-        self.textOutput.insertPlainText(output)
+        self.textOutput.insertPlainText(output + '\n')
         self.textOutput.moveCursor(QTextCursor.End)
 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
-        self.log('Checking Connections and Zeroizing Controls\n')
+        self.log('Checking Connections and Zeroizing Controls')
         initialize = True #This line is for testing purposes ONLY, remove after initialize controls function created
         if initialize:
             self.startButton.setEnabled(True)
@@ -196,17 +199,24 @@ class MainWindow(QWidget):
             self.textOutput.show()
         else:
             self.textOutput.setTextColor(self.red)
-            self.log('Initialization Failed. Check connections and try again\n')
+            self.log('Initialization Failed. Check connections and try again')
             self.textOutput.setTextColor(self.black)
 
     def startTest(self):
-        pass
+        self.initButton.setEnabled(False)
+        self.pauseButton.setEnabled(True)
+        self.startButton.setEnabled(False)
+        self.log('Test Starting')
 
     def pauseTest(self):
-        pass
-
+        self.pauseButton.hide()
+        self.continueButton.show()
+        self.log('Test Paused')
+        
     def continueTest(self):
-        pass
+        self.continueButton.hide()
+        self.pauseButton.show()
+        self.log('Test Continued')
 
     def saveData(self):
         pass
