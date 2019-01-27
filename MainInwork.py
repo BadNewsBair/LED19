@@ -134,7 +134,7 @@ class MainWindow(QWidget):
 
     def informationLabel(self):
         info = QLabel()
-        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button')
+        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button.')
         info.setFont(self.font)
         info.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         return info
