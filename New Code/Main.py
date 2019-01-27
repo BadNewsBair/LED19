@@ -145,7 +145,7 @@ class MainWindow(QWidget):
         outputText = QTextEdit(self)
         outputText.setFontPointSize(11)
         outputText.setReadOnly(True)
-        # outputText.hide()
+        outputText.hide()
         return outputText
 
     def wattageLabel(self):
@@ -183,7 +183,7 @@ class MainWindow(QWidget):
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
-            # self.lbl.hide()
+            self.lbl.hide()
             self.textOutput.show()
         else:
             self.textOutput.setTextColor(self.red)
