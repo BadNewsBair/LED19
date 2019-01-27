@@ -30,6 +30,7 @@ class MainWindow(QWidget):
         self.startButton = self.startTestButton()
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
+        self.saveButton = self.saveDataButton()
 
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
@@ -60,6 +61,7 @@ class MainWindow(QWidget):
         gridLayout.addWidget(self.disInput, 3, 1)
         gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
         gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
+        gridLayout.addWidget(self.saveButton, 6, 0, 1, 2)
 
 
         self.image = QPixmap('testDevice.jpg')
@@ -120,6 +122,15 @@ class MainWindow(QWidget):
         continueButton.clicked.connect(self.continueTest)
         return continueButton
 
+    def saveDataButton(self):
+        saveButton = QPushButton('Save Data')
+        saveButton.setToolTip('Save Data to File')
+        saveButton.clicked.connect(self.saveData)
+        saveButton.setEnabled(False)
+        saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        saveButton.setFont(self.font)
+        return saveButton
+
     def outputText(self):
         outputText = QTextEdit(self)
         outputText.setFontPointSize(11)
@@ -136,6 +147,7 @@ class MainWindow(QWidget):
     def wattageInput(self):
         inputText = QLineEdit(self)
         inputText.setPlaceholderText('Input Wattage')
+        inputText.setFont(self.font)
         return inputText
 
     def distanceLabel(self):
@@ -145,9 +157,10 @@ class MainWindow(QWidget):
         return distanceLabel
 
     def distanceInput(self):
-        text = QLineEdit(self)
-        text.setPlaceholderText('Input Distance')
-        return text
+        distance = QLineEdit(self)
+        distance.setPlaceholderText('Input Distance')
+        distance.setFont(self.font)
+        return distance
 
     def log(self, output):
         self.textOutput.insertPlainText(output)
@@ -174,6 +187,9 @@ class MainWindow(QWidget):
         pass
 
     def continueTest(self):
+        pass
+
+    def saveData(self):
         pass
 
 if __name__ == '__main__':
