@@ -15,7 +15,7 @@ class MainWindow(QWidget):
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
         self.font = QFont()
-        self.font.setPointSize(18)
+        self.font.setPointSize(15)
 
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
@@ -46,22 +46,21 @@ class MainWindow(QWidget):
         self.show()
 
     def mainLayout(self): 
-        menuLayout = QVBoxLayout()
         gridLayout = QGridLayout()
         picLayout = QVBoxLayout()
 
         self.horizontalGroupBox = QGroupBox('LED Test Module')
         
-        menuLayout.addWidget(self.initButton)
-        menuLayout.addLayout(gridLayout)
-        gridLayout.addWidget(self.comboLabel, 0,0)
-        gridLayout.addWidget(self.combo, 0,1)
-        gridLayout.addWidget(self.wattLabel, 1,0)
-        gridLayout.addWidget(self.watttInput, 1,1)
-        gridLayout.addWidget(self.disLabel, 2, 0)
-        gridLayout.addWidget(self.disInput, 2,1)
-        gridLayout.addWidget(self.startButton)
-        gridLayout.addWidget(self.pauseButton)
+        gridLayout.addWidget(self.initButton, 0, 0, 1, 2)
+        gridLayout.addWidget(self.comboLabel, 1, 0, 1, 1)
+        gridLayout.addWidget(self.combo, 1, 1, 1, 1)
+        gridLayout.addWidget(self.wattLabel, 2, 0)
+        gridLayout.addWidget(self.watttInput, 2, 1)
+        gridLayout.addWidget(self.disLabel, 3, 0)
+        gridLayout.addWidget(self.disInput, 3, 1)
+        gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
+        gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
+
 
         self.image = QPixmap('testDevice.jpg')
         self.lbl = QLabel(self)
@@ -70,7 +69,7 @@ class MainWindow(QWidget):
         picLayout.addWidget(self.textOutput)     
 
         fullLayout = QHBoxLayout()
-        fullLayout.addLayout(menuLayout)
+        fullLayout.addLayout(gridLayout)
         fullLayout.addLayout(picLayout)
 
         self.horizontalGroupBox.setLayout(fullLayout) 
