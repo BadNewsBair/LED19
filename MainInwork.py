@@ -3,7 +3,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-#This is a test 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -31,6 +30,7 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.saveButton = self.saveDataButton()
+        self.infoLabel = self.informationLabel()
 
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
@@ -62,6 +62,7 @@ class MainWindow(QWidget):
         gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
         gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
         gridLayout.addWidget(self.saveButton, 6, 0, 1, 2)
+        gridLayout.addWidget(self.infoLabel, 7, 0, 3, 0)
 
 
         self.image = QPixmap('testDevice.jpg')
@@ -78,7 +79,7 @@ class MainWindow(QWidget):
 
     def comboBoxLabel(self):
         comboLabel = QLabel()
-        comboLabel.setText('--Select Test Type--')
+        comboLabel.setText('--Select Test Mode--')
         comboLabel.setFont(self.font)
         return comboLabel
 
@@ -95,7 +96,7 @@ class MainWindow(QWidget):
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
         initButton.setFont(self.font) 
-        initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
+        # initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
         return initButton
 
     def startTestButton(self):
@@ -103,7 +104,7 @@ class MainWindow(QWidget):
         startButton.setToolTip('Initialize Controls must be complete prior to test start')
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
-        startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        # startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         startButton.setFont(self.font)
         return startButton
 
@@ -112,7 +113,7 @@ class MainWindow(QWidget):
         pauseButton.setToolTip('Pause Test')
         pauseButton.clicked.connect(self.pauseTest)
         pauseButton.setEnabled(False)
-        pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        # pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         pauseButton.setFont(self.font)
         return pauseButton
 
@@ -127,9 +128,16 @@ class MainWindow(QWidget):
         saveButton.setToolTip('Save Data to File')
         saveButton.clicked.connect(self.saveData)
         saveButton.setEnabled(False)
-        saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        # saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         saveButton.setFont(self.font)
         return saveButton
+
+    def informationLabel(self):
+        info = QLabel()
+        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button')
+        info.setFont(self.font)
+        info.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        return info
 
     def outputText(self):
         outputText = QTextEdit(self)
