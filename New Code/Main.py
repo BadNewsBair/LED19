@@ -13,9 +13,17 @@ class MainWindow(QWidget):
         self.height = 800
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
-        self.font = QFont()
-        self.font.setPointSize(15)
+        self.font15 = QFont()
+        self.font15.setPointSize(15)
+        self.font12 = QFont()
+        self.font12.setPointSize(12)
 
+        self.simplyLogo = QPixmap('simplyleds.png')
+        self.logoLabel = QLabel(self)
+        self.logoLabel.setPixmap(self.simplyLogo)
+
+        self.initInfo = self.informationLabel('Prior to test start a connection test must be made and all controls must return to their home position.\n'
+                                            'To accomplish this use the Initialize Controls button.')
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -30,7 +38,11 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.saveButton = self.saveDataButton()
-        self.infoLabel = self.informationLabel()
+        self.endInfo = self.informationLabel('Please refer to the following link for a walkthrough tutorial and instruction manual *******link********')
+        
+        self.mainimage = QPixmap('testDevice.jpg')
+        self.mainLabel = QLabel(self)
+        self.mainLabel.setPixmap(self.mainimage)
 
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
@@ -52,23 +64,22 @@ class MainWindow(QWidget):
 
         self.horizontalGroupBox = QGroupBox('LED Test Module')
         
-        gridLayout.addWidget(self.initButton, 0, 0, 1, 2)
-        gridLayout.addWidget(self.comboLabel, 1, 0, 1, 1)
-        gridLayout.addWidget(self.combo, 1, 1, 1, 1)
-        gridLayout.addWidget(self.wattLabel, 2, 0)
-        gridLayout.addWidget(self.watttInput, 2, 1)
-        gridLayout.addWidget(self.disLabel, 3, 0)
-        gridLayout.addWidget(self.disInput, 3, 1)
-        gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
-        gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
-        gridLayout.addWidget(self.saveButton, 6, 0, 1, 2)
-        gridLayout.addWidget(self.infoLabel, 7, 0, 3, 0)
+        gridLayout.addWidget(self.logoLabel, 0, 0, 1, 0)
+        gridLayout.addWidget(self.initInfo, 1, 0, 1, 0)
+        gridLayout.addWidget(self.initButton, 2, 0, 1, 2)
+        gridLayout.addWidget(self.comboLabel, 3, 0, 1, 1)
+        gridLayout.addWidget(self.combo, 3, 1, 1, 1)
+        gridLayout.addWidget(self.wattLabel, 4, 0)
+        gridLayout.addWidget(self.watttInput, 4, 1)
+        gridLayout.addWidget(self.disLabel, 5, 0)
+        gridLayout.addWidget(self.disInput, 5, 1)
+        gridLayout.addWidget(self.startButton, 6, 0, 1, 2)
+        gridLayout.addWidget(self.pauseButton, 7, 0, 1, 2)
+        gridLayout.addWidget(self.saveButton, 8, 0, 1, 2)
+        gridLayout.addWidget(self.endInfo, 9, 0, 1, 0)
+        
 
-
-        self.image = QPixmap('testDevice.jpg')
-        self.lbl = QLabel(self)
-        self.lbl.setPixmap(self.image)
-        picLayout.addWidget(self.lbl)
+        picLayout.addWidget(self.mainLabel)
         picLayout.addWidget(self.textOutput)     
 
         fullLayout = QHBoxLayout()
@@ -80,12 +91,12 @@ class MainWindow(QWidget):
     def comboBoxLabel(self):
         comboLabel = QLabel()
         comboLabel.setText('--Select Test Mode--')
-        comboLabel.setFont(self.font)
+        comboLabel.setFont(self.font15)
         return comboLabel
 
     def comboBox(self):
         combo = QComboBox()
-        combo.setFont(self.font)
+        combo.setFont(self.font15)
         combo.addItem('Test 1', 1)
         combo.addItem('Test 2', 2)
         combo.addItem('Test 3', 3)
@@ -95,8 +106,8 @@ class MainWindow(QWidget):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
-        initButton.setFont(self.font) 
-        # initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
+        initButton.setFont(self.font15) 
+        initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
         return initButton
 
     def startTestButton(self):
@@ -104,8 +115,8 @@ class MainWindow(QWidget):
         startButton.setToolTip('Initialize Controls must be complete prior to test start')
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
-        # startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        startButton.setFont(self.font)
+        startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        startButton.setFont(self.font15)
         return startButton
 
     def pauseTestButton(self):
@@ -113,8 +124,8 @@ class MainWindow(QWidget):
         pauseButton.setToolTip('Pause Test')
         pauseButton.clicked.connect(self.pauseTest)
         pauseButton.setEnabled(False)
-        # pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        pauseButton.setFont(self.font)
+        pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        pauseButton.setFont(self.font15)
         return pauseButton
 
     def continueTestButton(self):
@@ -128,14 +139,14 @@ class MainWindow(QWidget):
         saveButton.setToolTip('Save Data to File')
         saveButton.clicked.connect(self.saveData)
         saveButton.setEnabled(False)
-        # saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        saveButton.setFont(self.font)
+        saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        saveButton.setFont(self.font15)
         return saveButton
 
-    def informationLabel(self):
+    def informationLabel(self, text):
         info = QLabel()
-        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button.')
-        info.setFont(self.font)
+        info.setText(text)
+        info.setFont(self.font12)
         info.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         return info
 
@@ -149,25 +160,25 @@ class MainWindow(QWidget):
     def wattageLabel(self):
         wattageLabel = QLabel()
         wattageLabel.setText('--Input Wattage--')
-        wattageLabel.setFont(self.font)
+        wattageLabel.setFont(self.font15)
         return wattageLabel
 
     def wattageInput(self):
         inputText = QLineEdit(self)
         inputText.setPlaceholderText('Input Wattage')
-        inputText.setFont(self.font)
+        inputText.setFont(self.font15)
         return inputText
 
     def distanceLabel(self):
         distanceLabel = QLabel()
         distanceLabel.setText('--Input Distance--')
-        distanceLabel.setFont(self.font)
+        distanceLabel.setFont(self.font15)
         return distanceLabel
 
     def distanceInput(self):
         distance = QLineEdit(self)
         distance.setPlaceholderText('Input Distance')
-        distance.setFont(self.font)
+        distance.setFont(self.font15)
         return distance
 
     def log(self, output):
@@ -181,7 +192,7 @@ class MainWindow(QWidget):
         if initialize:
             self.startButton.setEnabled(True)
             self.startButton.setToolTip('Starts Selected Test')
-            self.lbl.hide()
+            self.mainLabel.hide()
             self.textOutput.show()
         else:
             self.textOutput.setTextColor(self.red)

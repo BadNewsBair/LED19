@@ -1,9 +1,7 @@
 import sys
-from PyQt5.QtGui import QIcon, QPixmap, QColor
-from PyQt5.QtWidgets import (QApplication, QDialog, QGroupBox, QHBoxLayout,
-                             QLabel, QPushButton, QTextEdit, QVBoxLayout,
-                             QWidget)
-
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
@@ -11,11 +9,31 @@ class MainWindow(QWidget):
         self.setWindowIcon(QIcon('icon.png'))
         self.left = 500
         self.top = 200
-        self.width = 1000
-        self.height = 500
-        self.text = QTextEdit(self)
-        self.text.setFontPointSize(12)
-        self.text.setReadOnly(True)
+        self.width = 1200
+        self.height = 800
+        self.red = QColor(255, 0, 0)
+        self.black = QColor(0, 0, 0)
+        self.font15 = QFont()
+        self.font15.setPointSize(15)
+        self.font12 = QFont()
+        self.font12.setPointSize(12)
+
+        self.initButton = self.initializeButton()
+        self.comboLabel = self.comboBoxLabel()
+        self.combo = self.comboBox()
+       
+        self.wattLabel = self.wattageLabel()
+        self.watttInput = self.wattageInput()
+        self.disLabel = self.distanceLabel()
+        self.disInput = self.distanceInput()
+        self.textOutput = self.outputText()
+        
+        self.startButton = self.startTestButton()
+        self.pauseButton = self.pauseTestButton()
+        self.continueButton = self.continueTestButton()
+        self.saveButton = self.saveDataButton()
+        self.infoLabel = self.informationLabel()
+
         self.windowLayout = QVBoxLayout()
         self.mainMenu()
  
@@ -30,175 +48,159 @@ class MainWindow(QWidget):
         self.setLayout(self.windowLayout)
         self.show()
 
-    def testMenu(self):
-        self.title = 'Test Menu'
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.testLayout()
- 
-        self.windowLayout.addWidget(self.testGroupBox)
-        self.windowLayout.addWidget(self.text)
-        self.setLayout(self.windowLayout)
-
-    def mainLayout(self):        
-        menuLayout = QVBoxLayout()
+    def mainLayout(self): 
+        gridLayout = QGridLayout()
         picLayout = QVBoxLayout()
 
-        self.horizontalGroupBox = QGroupBox('LED Test Module')  
+        self.horizontalGroupBox = QGroupBox('LED Test Module')
+        
+        gridLayout.addWidget(self.initButton, 0, 0, 1, 2)
+        gridLayout.addWidget(self.comboLabel, 1, 0, 1, 1)
+        gridLayout.addWidget(self.combo, 1, 1, 1, 1)
+        gridLayout.addWidget(self.wattLabel, 2, 0)
+        gridLayout.addWidget(self.watttInput, 2, 1)
+        gridLayout.addWidget(self.disLabel, 3, 0)
+        gridLayout.addWidget(self.disInput, 3, 1)
+        gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
+        gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
+        gridLayout.addWidget(self.saveButton, 6, 0, 1, 2)
+        gridLayout.addWidget(self.infoLabel, 7, 0, 3, 0)
 
-        self.initializeButton = QPushButton('Initialize', self)
-        self.initializeButton.setToolTip('Checks Connections and Homes Controls')
-        self.initializeButton.clicked.connect(self.initialize)
-        menuLayout.addWidget(self.initializeButton)
+        
+        self.image = QPixmap('testDevice.jpg')
+        self.lbl = QLabel(self)
+        self.lbl.setPixmap(self.image)
 
-        self.testButtonOne = QPushButton('Test Type 2-4', self)
-        self.testButtonOne.setToolTip('0 - 180 in 5 degree increments')
-        self.testButtonOne.clicked.connect(self.testType24)
-        self.testButtonOne.hide()
-        menuLayout.addWidget(self.testButtonOne)
-
-        self.testButtonTwo = QPushButton('Test Type 5',self)
-        self.testButtonTwo.setToolTip('0 - 90 in 5 degree increments')
-        self.testButtonTwo.clicked.connect(self.testType5)
-        self.testButtonTwo.hide()
-        menuLayout.addWidget(self.testButtonTwo)
-
-        self.testButtonThree = QPushButton('Test Arbitrary Complete')
-        self.testButtonThree.setToolTip('0 - 355 in 5 degree increments')
-        self.testButtonThree.clicked.connect(self.testComplete)
-        self.testButtonThree.hide()
-        menuLayout.addWidget(self.testButtonThree)
-
-        menuLayout.addWidget(self.text)
-
-        image = QPixmap('testDevice.jpg')
-        lbl = QLabel(self)
-        lbl.setPixmap(image)
-        picLayout.addWidget(lbl)     
+        picLayout.addWidget(self.lbl)
+        picLayout.addWidget(self.textOutput)     
 
         fullLayout = QHBoxLayout()
-        fullLayout.addLayout(menuLayout)
+        fullLayout.addLayout(gridLayout)
         fullLayout.addLayout(picLayout)
 
         self.horizontalGroupBox.setLayout(fullLayout) 
 
+    def comboBoxLabel(self):
+        comboLabel = QLabel()
+        comboLabel.setText('--Select Test Mode--')
+        comboLabel.setFont(self.font15)
+        return comboLabel
+
+    def comboBox(self):
+        combo = QComboBox()
+        combo.setFont(self.font15)
+        combo.addItem('Test 1', 1)
+        combo.addItem('Test 2', 2)
+        combo.addItem('Test 3', 3)
+        return combo
+
+    def initializeButton(self):
+        initButton = QPushButton('Initialize Controls', self)
+        initButton.setToolTip('Checks Connections and Homes Controls')
+        initButton.clicked.connect(self.initialize)
+        initButton.setFont(self.font15) 
+        # initButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)    
+        return initButton
+
+    def startTestButton(self):
+        startButton = QPushButton('Begin Selected Test')
+        startButton.setToolTip('Initialize Controls must be complete prior to test start')
+        startButton.clicked.connect(self.startTest)
+        startButton.setEnabled(False)
+        # startButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        startButton.setFont(self.font15)
+        return startButton
+
+    def pauseTestButton(self):
+        pauseButton = QPushButton('Pause Test')
+        pauseButton.setToolTip('Pause Test')
+        pauseButton.clicked.connect(self.pauseTest)
+        pauseButton.setEnabled(False)
+        # pauseButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        pauseButton.setFont(self.font15)
+        return pauseButton
+
+    def continueTestButton(self):
+        continueButton = QPushButton('Continue Test')
+        continueButton.setToolTip('Continue Test')
+        continueButton.clicked.connect(self.continueTest)
+        return continueButton
+
+    def saveDataButton(self):
+        saveButton = QPushButton('Save Data')
+        saveButton.setToolTip('Save Data to File')
+        saveButton.clicked.connect(self.saveData)
+        saveButton.setEnabled(False)
+        # saveButton.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        saveButton.setFont(self.font15)
+        return saveButton
+
+    def informationLabel(self):
+        info = QLabel()
+        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button.')
+        info.setFont(self.font12)
+        info.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        return info
+
+    def outputText(self):
+        outputText = QTextEdit(self)
+        outputText.setFontPointSize(11)
+        outputText.setReadOnly(True)
+        outputText.hide()
+        return outputText
+
+    def wattageLabel(self):
+        wattageLabel = QLabel()
+        wattageLabel.setText('--Input Wattage--')
+        wattageLabel.setFont(self.font15)
+        return wattageLabel
+
+    def wattageInput(self):
+        inputText = QLineEdit(self)
+        inputText.setPlaceholderText('Input Wattage')
+        inputText.setFont(self.font15)
+        return inputText
+
+    def distanceLabel(self):
+        distanceLabel = QLabel()
+        distanceLabel.setText('--Input Distance--')
+        distanceLabel.setFont(self.font15)
+        return distanceLabel
+
+    def distanceInput(self):
+        distance = QLineEdit(self)
+        distance.setPlaceholderText('Input Distance')
+        distance.setFont(self.font15)
+        return distance
+
+    def log(self, output):
+        self.textOutput.insertPlainText(output)
+        self.textOutput.moveCursor(QTextCursor.End)
+
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
-        self.text.insertPlainText('Checking Connections and Zeroizing Controls\n')
-        initialize = True
+        self.log('Checking Connections and Zeroizing Controls\n')
+        initialize = True #This line is for testing purposes ONLY, remove after initialize controls function created
         if initialize:
-            self.text.insertPlainText('Complete\n')
-            self.initializeButton.hide()
-            self.testButtonOne.show()
-            self.testButtonTwo.show()
-            self.testButtonThree.show()
-            self.text.insertPlainText('Select Test Mode\n')
+            self.startButton.setEnabled(True)
+            self.startButton.setToolTip('Starts Selected Test')
+            self.lbl.hide()
+            self.textOutput.show()
         else:
-            red = QColor(255, 0, 0)
-            black = QColor(0, 0, 0)
-            self.text.setTextColor(red)
-            self.text.insertPlainText('Initialization Failed. Check connections and try again\n')
-            self.text.setTextColor(black)
-            
-    def testType5(self):
-        self.test = TestWindow(1)
-        self.test.show()
-        main.close()
+            self.textOutput.setTextColor(self.red)
+            self.log('Initialization Failed. Check connections and try again\n')
+            self.textOutput.setTextColor(self.black)
 
-    def testType24(self):
-        self.test = TestWindow(2)
-        self.test.show()
-        main.close()
+    def startTest(self):
+        pass
 
-    def testComplete(self):
-        self.test = TestWindow(3)
-        self.test.show()
-        main.close()
-
-class TestWindow(QDialog):
-    def __init__(self, testType, parent = None):
-        super(TestWindow, self).__init__(parent)
-        self.testTitle = 'Test Progress'
-        self.testType = testType
-        self.setWindowIcon(QIcon('icon.png'))
-        self.left = 500
-        self.top = 200
-        self.width = 1000
-        self.height = 1000
-        self.text = QTextEdit(self)
-        self.text.setFontPointSize(12)
-        self.text.setReadOnly(True)
-        self.testMenu()
-
-    def testMenu(self):
-        self.setWindowTitle(self.testTitle)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.testLayout()
- 
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
-        windowLayout.addWidget(self.text)
-        self.setLayout(windowLayout)
- 
-        self.show()
-        
-    def testLayout(self):
-        if self.testType == 1:
-            testTitle = 'Type 5 Light Test'
-            self.text.insertPlainText('Start test to begin Type 5 Test(0-90 in 5 degree increments)\n')
-        elif self.testType ==2:
-            testTitle = 'Type 2-4 Light Test'
-            self.text.insertPlainText('Start test to begin Type 2-4 Test(0-180 in 5 degree increments)\n')
-        elif self.testType ==3:
-            testTitle = 'Arbitrary Complete Test'
-            self.text.insertPlainText('Start test to begin Arbitrary Complete Test(0-355 in 5 degree increments)\n')
-
-        self.horizontalGroupBox = QGroupBox(testTitle)
-        layout = QHBoxLayout()
-
-        self.startButton = QPushButton('Start', self)
-        self.startButton.setToolTip('Begin Test')
-        self.startButton.clicked.connect(self.start)
-        layout.addWidget(self.startButton)
-
-        self.pauseButton = QPushButton('Pause Test',self)
-        self.pauseButton.setToolTip('Pause Test in Progress')
-        self.pauseButton.clicked.connect(self.pause)
-        self.pauseButton.setEnabled(False)
-        layout.addWidget(self.pauseButton)
-
-        self.continueButton = QPushButton('Continue Test', self)
-        self.continueButton.setToolTip('Continue Test in Progress')
-        self.continueButton.clicked.connect(self.continueTest)
-        layout.addWidget(self.continueButton)
-        self.continueButton.hide()
-
-        self.saveButton = QPushButton('Save Data', self)
-        self.saveButton.setToolTip('Opens File Directory')
-        self.saveButton.clicked.connect(self.saveFile)
-        self.saveButton.setEnabled(False)
-        layout.addWidget(self.saveButton)
-
-        self.horizontalGroupBox.setLayout(layout)
-
-    def start(self):
-        self.pauseButton.setEnabled(True)
-        self.startButton.setEnabled(False)
-        self.text.insertPlainText('Test Start\n')
-    
-    def pause(self):
-        self.pauseButton.hide()
-        self.continueButton.show()
-        self.text.insertPlainText('Test Paused\n')
+    def pauseTest(self):
+        pass
 
     def continueTest(self):
-        self.continueButton.hide()
-        self.pauseButton.show()
-        self.text.insertPlainText('Test Continued\n')
+        pass
 
-    def saveFile(self):
+    def saveData(self):
         pass
 
 if __name__ == '__main__':
