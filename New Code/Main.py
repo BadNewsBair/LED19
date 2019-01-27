@@ -18,6 +18,8 @@ class MainWindow(QWidget):
         self.font12 = QFont()
         self.font12.setPointSize(12)
 
+        self.initInfo = self.informationLabel('Prior to test start a connection test must be made and all controls must return to their home position.\n'
+                                            'To accomplish this use the Initialize Controls button.')
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -32,8 +34,8 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.saveButton = self.saveDataButton()
-        self.infoLabel = self.informationLabel()
-
+        self.endInfo = self.informationLabel('Please refer to the following link for a walkthrough tutorial and instruction manual *******link********')
+        
         self.image = QPixmap('testDevice.jpg')
         self.lbl = QLabel(self)
         self.lbl.setPixmap(self.image)
@@ -58,17 +60,19 @@ class MainWindow(QWidget):
 
         self.horizontalGroupBox = QGroupBox('LED Test Module')
         
-        gridLayout.addWidget(self.initButton, 0, 0, 1, 2)
-        gridLayout.addWidget(self.comboLabel, 1, 0, 1, 1)
-        gridLayout.addWidget(self.combo, 1, 1, 1, 1)
-        gridLayout.addWidget(self.wattLabel, 2, 0)
-        gridLayout.addWidget(self.watttInput, 2, 1)
-        gridLayout.addWidget(self.disLabel, 3, 0)
-        gridLayout.addWidget(self.disInput, 3, 1)
-        gridLayout.addWidget(self.startButton, 4, 0, 1, 2)
-        gridLayout.addWidget(self.pauseButton, 5, 0, 1, 2)
-        gridLayout.addWidget(self.saveButton, 6, 0, 1, 2)
-        gridLayout.addWidget(self.infoLabel, 7, 0, 3, 0)
+        gridLayout.addWidget(self.initInfo, 0, 0, 1, 0)
+        gridLayout.addWidget(self.initButton, 1, 0, 1, 2)
+        gridLayout.addWidget(self.comboLabel, 2, 0, 1, 1)
+        gridLayout.addWidget(self.combo, 2, 1, 1, 1)
+        gridLayout.addWidget(self.wattLabel, 3, 0)
+        gridLayout.addWidget(self.watttInput, 3, 1)
+        gridLayout.addWidget(self.disLabel, 4, 0)
+        gridLayout.addWidget(self.disInput, 4, 1)
+        gridLayout.addWidget(self.startButton, 5, 0, 1, 2)
+        gridLayout.addWidget(self.pauseButton, 6, 0, 1, 2)
+        gridLayout.addWidget(self.saveButton, 7, 0, 1, 2)
+        gridLayout.addWidget(self.endInfo, 8, 0, 1, 0)
+        
 
         picLayout.addWidget(self.lbl)
         picLayout.addWidget(self.textOutput)     
@@ -134,9 +138,9 @@ class MainWindow(QWidget):
         saveButton.setFont(self.font15)
         return saveButton
 
-    def informationLabel(self):
+    def informationLabel(self, text):
         info = QLabel()
-        info.setText('Prior to test start a connection test must be made and all controls must return\nto their home position. To accomplish this use the Initialize Controls button.')
+        info.setText(text)
         info.setFont(self.font12)
         info.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         return info
