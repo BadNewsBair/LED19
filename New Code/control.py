@@ -1,9 +1,9 @@
 import sys
 import numpy as np
 
-class Measurement:
+class Control:
     def __init__(self):
         pass
 
-    def beginTest(self):
+    def rotate(self, direction, increment):
         pass

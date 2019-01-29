@@ -185,7 +185,7 @@ class MainWindow(QWidget):
         return distance
 
     def log(self, output):
-        self.textOutput.insertPlainText(output + '\n')
+        self.textOutput.append(output)
         self.textOutput.moveCursor(QTextCursor.End)
 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
