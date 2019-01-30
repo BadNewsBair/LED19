@@ -23,7 +23,7 @@ class MainWindow(QWidget):
         self.logoLabel.setPixmap(self.simplyLogo)
 
         self.initInfo = self.informationLabel('Prior to test start a connection test must be made and all controls must return to their home position.\n'
-                                            'To accomplish this use the Initialize Controls button.')
+                                                'To accomplish this use the Initialize Controls button.')
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -185,7 +185,7 @@ class MainWindow(QWidget):
         return distance
 
     def log(self, output):
-        self.textOutput.insertPlainText(output + '\n')
+        self.textOutput.append(output)
         self.textOutput.moveCursor(QTextCursor.End)
 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
@@ -206,6 +206,7 @@ class MainWindow(QWidget):
         self.initButton.setEnabled(False)
         self.pauseButton.setEnabled(True)
         self.startButton.setEnabled(False)
+        self.combo.setEnabled(False)
         self.log('Test Starting')
 
     def pauseTest(self):
