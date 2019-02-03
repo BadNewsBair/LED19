@@ -17,8 +17,6 @@ class MainWindow(QWidget):
         self.height = 800
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
-        self.font15 = QFont()
-        self.font15.setPointSize(13)
         self.font12 = QFont()
         self.font12.setPointSize(12)
 
@@ -91,12 +89,12 @@ class MainWindow(QWidget):
     def comboBoxLabel(self):
         comboLabel = QLabel()
         comboLabel.setText('--Select Test Mode--')
-        comboLabel.setFont(self.font15)
+        comboLabel.setFont(self.font12)
         return comboLabel
 
     def comboBox(self):
         combo = QComboBox()
-        combo.setFont(self.font15)
+        combo.setFont(self.font12)
         combo.addItem('Test 1', 1)
         combo.addItem('Test 2', 2)
         combo.addItem('Test 3', 3)
@@ -106,7 +104,7 @@ class MainWindow(QWidget):
         initButton = QPushButton('Initialize Controls', self)
         initButton.setToolTip('Checks Connections and Homes Controls')
         initButton.clicked.connect(self.initialize)
-        initButton.setFont(self.font15) 
+        initButton.setFont(self.font12) 
         self.setButtonSize(initButton)   
         return initButton
 
@@ -115,7 +113,7 @@ class MainWindow(QWidget):
         startButton.setToolTip('Initialize Controls must be complete prior to test start')
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
-        startButton.setFont(self.font15)
+        startButton.setFont(self.font12)
         self.setButtonSize(startButton)
         return startButton
 
@@ -124,7 +122,7 @@ class MainWindow(QWidget):
         pauseButton.setToolTip('Pause Test')
         pauseButton.clicked.connect(self.pauseTest)
         pauseButton.setEnabled(False)
-        pauseButton.setFont(self.font15)
+        pauseButton.setFont(self.font12)
         self.setButtonSize(pauseButton)
         return pauseButton
 
@@ -132,7 +130,7 @@ class MainWindow(QWidget):
         continueButton = QPushButton('Continue Test')
         continueButton.setToolTip('Continue Test')
         continueButton.clicked.connect(self.continueTest)
-        continueButton.setFont(self.font15)
+        continueButton.setFont(self.font12)
         self.setButtonSize(continueButton)
         continueButton.hide()
         return continueButton
@@ -142,7 +140,7 @@ class MainWindow(QWidget):
         saveButton.setToolTip('Save Data to File')
         saveButton.clicked.connect(self.saveData)
         saveButton.setEnabled(False)
-        saveButton.setFont(self.font15)
+        saveButton.setFont(self.font12)
         self.setButtonSize(saveButton)
         return saveButton
 
@@ -164,26 +162,26 @@ class MainWindow(QWidget):
     def wattageLabel(self):
         wattageLabel = QLabel()
         wattageLabel.setText('Watts')
-        wattageLabel.setFont(self.font15)
+        wattageLabel.setFont(self.font12)
         return wattageLabel
 
     def wattageInput(self):
         inputText = QLineEdit(self)
         inputText.setPlaceholderText('Input Wattage')
-        inputText.setFont(self.font15)
+        inputText.setFont(self.font12)
         return inputText
 
     def distanceLabel(self):
         distanceLabel = QLabel()
         #TODO: Fix distance measurement, Meters or Feet
-        distanceLabel.setText('Meters')
-        distanceLabel.setFont(self.font15)
+        distanceLabel.setText('Meters ')
+        distanceLabel.setFont(self.font12)
         return distanceLabel
 
     def distanceInput(self):
         distance = QLineEdit(self)
         distance.setPlaceholderText('Input Distance')
-        distance.setFont(self.font15)
+        distance.setFont(self.font12)
         return distance
 
     def log(self, output):
