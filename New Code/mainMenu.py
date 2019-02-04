@@ -1,4 +1,6 @@
 import sys
+import time
+import control as ctrl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
@@ -40,7 +42,7 @@ class MainWindow(QWidget):
         logoLabel = QLabel(self)
         logoLabel.setPixmap(simplyLogo)
         self.initInfo = self.informationLabel('Prior to test start all controls must return to their home position.\n'
-                                        'To accomplish this use the Initialize Controls button.')
+                                             'To accomplish this use the Initialize Controls button.')
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -58,11 +60,11 @@ class MainWindow(QWidget):
         layout.addWidget(logoLabel, 1, 0)
         layout.addWidget(self.initInfo, 2, 0, 1, 2)
         layout.addWidget(self.initButton, 3, 0, 1, 2)
-        layout.addWidget(self.comboLabel, 4, 0)
-        layout.addWidget(self.combo, 4, 0, 1, 2)
-        layout.addWidget(self.wattage, 5, 0, 1, 2)
+        layout.addWidget(self.comboLabel, 4, 1)
+        layout.addWidget(self.combo, 4, 0, 1, 1)
+        layout.addWidget(self.wattage, 5, 0, 1, 1)
         layout.addWidget(self.wattLabel, 5, 1)
-        layout.addWidget(self.distance, 6, 0, 1, 2)
+        layout.addWidget(self.distance, 6, 0, 1, 1)
         layout.addWidget(self.disLabel, 6, 1)
         layout.addWidget(self.startButton, 7, 0, 1, 2)
         layout.addWidget(self.pauseButton, 8, 0, 1, 2)
@@ -81,14 +83,11 @@ class MainWindow(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.mainLabel)
         layout.addWidget(self.textOutput)
-        self.RightGroup.setLayout(layout)   
-
-    def createBotRightGroup(self):
-        pass
+        self.RightGroup.setLayout(layout)
 
     def comboBoxLabel(self):
         comboLabel = QLabel()
-        comboLabel.setText('--Select Test Mode--')
+        comboLabel.setText('Test Mode')
         comboLabel.setFont(self.font12)
         return comboLabel
 
@@ -110,7 +109,7 @@ class MainWindow(QWidget):
 
     def startTestButton(self):
         startButton = QPushButton('Begin Selected Test')
-        startButton.setToolTip('Initialize Controls must be complete prior to test start')
+        startButton.setToolTip('Starts Selected Test')
         startButton.clicked.connect(self.startTest)
         startButton.setEnabled(False)
         startButton.setFont(self.font12)
@@ -199,20 +198,22 @@ class MainWindow(QWidget):
 
     #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
     def initialize(self):
+        self.mainLabel.hide()
+        self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
-        initialize = True #This line is for testing purposes ONLY, remove after initialize controls function created
-        if initialize:
+        initialize = ctrl.initializeControls()
+        connection = ctrl.checkConnection()
+        if initialize and connection:
             self.startButton.setEnabled(True)
-            self.startButton.setToolTip('Starts Selected Test')
-            self.mainLabel.hide()
-            self.textOutput.show()
         else:
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
         try: 
-            wattage = float(self.wattage.text())  
-            distance = float(self.distance.text()) 
+            userWattage = float(self.wattage.text())  
+            userDistance = float(self.distance.text())
+            self.wattage.setDisabled(True)
+            self.distance.setDisabled(True) 
             self.initButton.setEnabled(False)
             self.pauseButton.setEnabled(True)
             self.startButton.setEnabled(False)
