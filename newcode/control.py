@@ -1,6 +1,5 @@
 import sys
 import time
-import mainMenu
 
 # class motorControl():
 #     def __init__(self):
