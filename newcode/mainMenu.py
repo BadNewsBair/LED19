@@ -35,7 +35,7 @@ class MainWindow(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.motor = MotorControl(self.log)
-        self.measure = Measurement(self.log)
+        # self.measure = Measurement(self.log)
 
     def createLeftGroup(self):
         self.LeftGroup = QGroupBox('LED Test Module')
