@@ -1,21 +1,25 @@
 import sys
 import time
 
-# class motorControl():
-#     def __init__(self):
-#         pass
+class MotorControl():
+    logger = None
+    def __init__(self, mainlog):
+        self.logger = mainlog
 
-def initializeControls():
-    #TODO: Fix this function, currently returns boolean for testing
-    return True
+    def initializeControls(self):
+        #TODO: Fix this function, currently returns boolean for testing
+        self.logger('test initialize')
+        return True
 
-def checkConnection():
-    #TODO: Fix, boolean return is for testing purposes
-    return True
+    def checkConnection(self):
+        #TODO: Fix, boolean return is for testing purposes
+        self.logger('test connection')
+        return True
 
-def lowerMotor(direction):
-    pass
+    def lowerMotor(self, direction):
+        pass
 
-def upperMotor(direction):
-    pass
+    def upperMotor(self, direction):
+        pass
+
 

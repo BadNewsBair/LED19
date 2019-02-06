@@ -1,9 +1,10 @@
 import sys
 import numpy as np
 
-class Measurement:
-    def __init__(self):
-        pass
+class Measurement():
+    logger = None
+    def __init__(self, mainlog):
+        self.logger = mainlog
 
     def beginTest(self):
-        pass
+        self.logger('testing log output')

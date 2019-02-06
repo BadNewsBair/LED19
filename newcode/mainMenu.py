@@ -1,6 +1,7 @@
 import sys
 import time
-import control as ctrl
+from control import MotorControl
+from measurement import Measurement
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
@@ -31,10 +32,10 @@ class MainWindow(QWidget):
         mainLayout.setColumnStretch(1, 1)
         mainLayout.setRowStretch(1, 1)
         self.setLayout(mainLayout)
-
         self.setGeometry(self.left, self.top, self.width, self.height)
-        QApplication.setStyle(QStyleFactory.create('Fusion'))
-        QApplication.setPalette(QApplication.style().standardPalette())
+
+        self.motor = MotorControl(self.log)
+        self.measure = Measurement(self.log)
 
     def createLeftGroup(self):
         self.LeftGroup = QGroupBox('LED Test Module')
@@ -186,7 +187,7 @@ class MainWindow(QWidget):
     def log(self, output):
         self.textOutput.append(output)
         self.textOutput.moveCursor(QTextCursor.End)
-
+    
     def errorLog(self, output):
         self.textOutput.setTextColor(self.red)
         self.textOutput.append(output)
@@ -201,8 +202,8 @@ class MainWindow(QWidget):
         self.mainLabel.hide()
         self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
-        initialize = ctrl.initializeControls()
-        connection = ctrl.checkConnection()
+        initialize = self.motor.initializeControls()
+        connection = self.motor.checkConnection()
         if initialize and connection:
             self.startButton.setEnabled(True)
         else:
