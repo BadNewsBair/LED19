@@ -174,7 +174,7 @@ class MainWindow(QWidget):
     def distanceLabel(self):
         distanceLabel = QLabel()
         #TODO: Fix distance measurement, Meters or Feet
-        distanceLabel.setText('Meters ')
+        distanceLabel.setText('Feet ')
         distanceLabel.setFont(self.font12)
         return distanceLabel
 
@@ -215,10 +215,10 @@ class MainWindow(QWidget):
             userDistance = float(self.distance.text())
             self.wattage.setDisabled(True)
             self.distance.setDisabled(True) 
-            self.initButton.setEnabled(False)
-            self.pauseButton.setEnabled(True)
-            self.startButton.setEnabled(False)
-            self.combo.setEnabled(False)
+            self.initButton.setDisabled(True)
+            self.pauseButton.setDisabled(False)
+            self.startButton.setDisabled(True)
+            self.combo.setDisabled(True)
             self.log('Test Starting')
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')

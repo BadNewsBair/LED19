@@ -8,12 +8,12 @@ class MotorControl():
 
     def initializeControls(self):
         #TODO: Fix this function, currently returns boolean for testing
-        self.logger('test initialize')
+        self.logger('Test initialize')
         return True
 
     def checkConnection(self):
         #TODO: Fix, boolean return is for testing purposes
-        self.logger('test connection')
+        self.logger('Test connection')
         return True
 
     def lowerMotor(self, direction):
