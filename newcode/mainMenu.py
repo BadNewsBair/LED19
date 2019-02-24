@@ -1,5 +1,6 @@
 import sys
 import time
+import threading
 from control import MotorControl
 from measurement import Measurement
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
@@ -14,6 +15,8 @@ class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
+        self.measureThread = Measurement(self.log, app)
+        self.setWindowTitle('Simply LEDs')
         self.left = 200
         self.top = 100
         self.width = 1000
@@ -210,6 +213,7 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
+        self.thread = threading.Thread(target = self.measureThread.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
@@ -220,17 +224,21 @@ class MainWindow(QWidget):
             self.startButton.setDisabled(True)
             self.combo.setDisabled(True)
             self.log('Test Starting')
+            self.thread.daemon = True
+            self.thread.start()
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
 
     def pauseTest(self):
         self.pauseButton.hide()
         self.continueButton.show()
+        self.measureThread.isPaused = True
         self.log('Test Paused')
         
     def continueTest(self):
         self.continueButton.hide()
         self.pauseButton.show()
+        self.measureThread.isPaused = False
         self.log('Test Continued')
 
     def saveData(self):
