@@ -232,14 +232,14 @@ class MainWindow(QWidget):
     def pauseTest(self):
         self.pauseButton.hide()
         self.continueButton.show()
-        self.measureThread.isPaused = True
         self.log('Test Paused')
+        self.measureThread.isPaused = True
         
     def continueTest(self):
         self.continueButton.hide()
         self.pauseButton.show()
-        self.measureThread.isPaused = False
         self.log('Test Continued')
+        self.measureThread.isPaused = False
 
     def saveData(self):
         pass
