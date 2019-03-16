@@ -12,7 +12,6 @@ class Measurement():
         self.app = app
 
     def beginTest(self):
-        self.logger('testing log output')
         iteration = 1
         while iteration < 200:
             if self.isPaused:

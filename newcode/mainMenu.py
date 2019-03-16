@@ -7,9 +7,7 @@ from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-        QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
-        QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
-        QVBoxLayout, QWidget)
+        QPushButton, QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
@@ -226,6 +224,7 @@ class MainWindow(QWidget):
             self.log('Test Starting')
             self.thread.daemon = True
             self.thread.start()
+
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
 

@@ -8,7 +8,7 @@ class MotorControl():
 
     def initializeControls(self):
         #TODO: Fix this function, currently returns boolean for testing
-        self.logger('Test initialize')
+        self.logger('Homing Motors')
         return True
 
     def checkConnection(self):
