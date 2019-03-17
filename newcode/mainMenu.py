@@ -209,6 +209,7 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
+        self.measure.isComplete = False
         self.thread = threading.Thread(target = self.measure.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
