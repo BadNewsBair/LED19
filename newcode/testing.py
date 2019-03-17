@@ -20,7 +20,7 @@ def lumens(last_angle_measured):
     #deletes the last 2 columns since they are nans.....probably dont need this when creating our own
     Rho_Theta = Rho_Theta.drop(Rho_Theta.columns[[-2,-1]], axis =1)
     Rho_Theta = Rho_Theta.head(2)
-    rows, cols = Rho_Theta.shape
+    _, cols = Rho_Theta.shape
 
     data = pd.read_excel('Lumen Calculator IES.xlsx',header= None,skiprows= 17)
     data = data.drop(data.columns[[-2,-1]], axis =1)
@@ -40,14 +40,16 @@ def lumens(last_angle_measured):
         rho_1, _ = Rho_Theta[i+1]    
         steradians_values.append(steradians(rho_0=rho_0, rho_1 =rho_1))
 
-    s = pd.Series(dict(zip(data.columns, steradians_values)))
-    data = data.append(s, ignore_index = True)
+    steradians_values = pd.Series(dict(zip(data.columns, steradians_values)))
+    data = data.append(steradians_values, ignore_index = True)
 
     lumens_values = []
     lumens_values.append('Lumens')
     
-    print(data)
+    print(data.round(3))
     
+    steradians_values = data.loc([0],[1])
+    print(steradians_values)
 
 
     #this is for testing purposes only at the moment
