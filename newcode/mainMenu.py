@@ -222,9 +222,11 @@ class MainWindow(QWidget):
             self.log('Test Starting')
             self.thread.daemon = True
             self.thread.start()
-
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
+
+        if self.measure.isComplete:
+            self.log('Test Complete')
 
     def pauseTest(self):
         self.pauseButton.hide()
