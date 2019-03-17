@@ -33,8 +33,8 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.measureThread = Measurement(self.log)
-        self.motorThread = MotorControl(self.log)
+        self.measure = Measurement(self.log)
+        self.motor = MotorControl(self.log)
 
     def createLeftGroup(self):
         self.LeftGroup = QGroupBox('LED Test Module')
@@ -192,7 +192,6 @@ class MainWindow(QWidget):
         self.textOutput.append(output)
         self.textOutput.setTextColor(self.black)
 
-
     def setButtonSize(self, button):
         button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
@@ -201,6 +200,7 @@ class MainWindow(QWidget):
         self.mainLabel.hide()
         self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
+        
         initialize = True
         connection = True
         if initialize and connection:
@@ -209,7 +209,7 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
-        self.thread = threading.Thread(target = self.measureThread.beginTest)
+        self.thread = threading.Thread(target = self.measure.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
@@ -230,13 +230,13 @@ class MainWindow(QWidget):
         self.pauseButton.hide()
         self.continueButton.show()
         self.log('Test Paused')
-        self.measureThread.isPaused = True
+        self.measure.isPaused = True
         
     def continueTest(self):
         self.continueButton.hide()
         self.pauseButton.show()
         self.log('Test Continued')
-        self.measureThread.isPaused = False
+        self.measure.isPaused = False
 
     def saveData(self):
         pass
