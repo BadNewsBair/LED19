@@ -2,9 +2,7 @@ import sys
 import time
 
 class Measurement():
-    logger = None
     isPaused = False
-    app = None
 
     def __init__(self, mainlog):
         super().__init__()
@@ -27,7 +25,6 @@ class Measurement():
             break
 
 class MotorControl():
-    logger = None
     def __init__(self, mainlog):
         self.logger = mainlog
 
