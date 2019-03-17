@@ -1,8 +1,7 @@
 import sys
 import time
 import threading
-from control import MotorControl
-from measurement import Measurement
+from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
@@ -13,7 +12,6 @@ class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
-        self.measureThread = Measurement(self.log, app)
         self.setWindowTitle('Simply LEDs')
         self.left = 200
         self.top = 100
@@ -35,8 +33,8 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.motor = MotorControl(self.log)
-        # self.measure = Measurement(self.log)
+        self.measureThread = Measurement(self.log)
+        self.motorThread = MotorControl(self.log)
 
     def createLeftGroup(self):
         self.LeftGroup = QGroupBox('LED Test Module')
@@ -198,13 +196,13 @@ class MainWindow(QWidget):
     def setButtonSize(self, button):
         button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
-    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
+    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) 
     def initialize(self):
         self.mainLabel.hide()
         self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
-        initialize = self.motor.initializeControls()
-        connection = self.motor.checkConnection()
+        initialize = True
+        connection = True
         if initialize and connection:
             self.startButton.setEnabled(True)
         else:

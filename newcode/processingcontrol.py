@@ -6,10 +6,9 @@ class Measurement():
     isPaused = False
     app = None
 
-    def __init__(self, mainlog, app):
+    def __init__(self, mainlog):
         super().__init__()
         self.logger = mainlog
-        self.app = app
 
     def beginTest(self):
         iteration = 1
@@ -17,7 +16,6 @@ class Measurement():
             if self.isPaused:
                 pass
             else:
-                self.app.processEvents()
                 self.logger('Iteration %s' % iteration)
                 time.sleep(0.1)
                 iteration += 1
