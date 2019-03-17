@@ -1,19 +1,18 @@
 import sys
 import time
-from control import MotorControl
-from measurement import Measurement
+import threading
+from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-        QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
-        QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
-        QVBoxLayout, QWidget)
+        QPushButton, QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowTitle('Simply LEDs')
         self.left = 200
         self.top = 100
         self.width = 1000
@@ -34,8 +33,8 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
+        self.measure = Measurement(self.log)
         self.motor = MotorControl(self.log)
-        # self.measure = Measurement(self.log)
 
     def createLeftGroup(self):
         self.LeftGroup = QGroupBox('LED Test Module')
@@ -193,23 +192,24 @@ class MainWindow(QWidget):
         self.textOutput.append(output)
         self.textOutput.setTextColor(self.black)
 
-
     def setButtonSize(self, button):
         button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
-    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) (try textChanged.connect for status update output)
+    #TODO: intialize variable needs to be set by checking connections and homing controls (To check fail condition set initialize = False) 
     def initialize(self):
         self.mainLabel.hide()
         self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
-        initialize = self.motor.initializeControls()
-        connection = self.motor.checkConnection()
+        
+        initialize = True
+        connection = True
         if initialize and connection:
             self.startButton.setEnabled(True)
         else:
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
+        self.thread = threading.Thread(target = self.measure.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
@@ -220,6 +220,9 @@ class MainWindow(QWidget):
             self.startButton.setDisabled(True)
             self.combo.setDisabled(True)
             self.log('Test Starting')
+            self.thread.daemon = True
+            self.thread.start()
+
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
 
@@ -227,11 +230,13 @@ class MainWindow(QWidget):
         self.pauseButton.hide()
         self.continueButton.show()
         self.log('Test Paused')
+        self.measure.isPaused = True
         
     def continueTest(self):
         self.continueButton.hide()
         self.pauseButton.show()
         self.log('Test Continued')
+        self.measure.isPaused = False
 
     def saveData(self):
         pass
