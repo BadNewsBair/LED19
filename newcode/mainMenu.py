@@ -1,13 +1,13 @@
 import sys
+import os
 import time
 import threading
-from multiprocessing.pool import ThreadPool
 from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-        QPushButton, QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
+        QMessageBox, QPushButton, QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
@@ -54,7 +54,7 @@ class MainWindow(QWidget):
         self.startButton = self.startTestButton()
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
-        self.resetButton = self.resetModuleButton()
+        self.restartButton = self.restartModuleButton()
         self.endInfo = self.informationLabel('Please refer to the following link for a walkthrough tutorial and\ninstruction manual *******link********')
         
         layout = QGridLayout()
@@ -70,7 +70,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.startButton, 7, 0, 1, 2)
         layout.addWidget(self.pauseButton, 8, 0, 1, 2)
         layout.addWidget(self.continueButton, 9, 0, 1, 2)
-        layout.addWidget(self.resetButton, 10, 0, 1, 2)
+        layout.addWidget(self.restartButton, 10, 0, 1, 2)
         layout.addWidget(self.endInfo, 11, 0, 1, 2)
         self.LeftGroup.setLayout(layout)
 
@@ -135,14 +135,13 @@ class MainWindow(QWidget):
         continueButton.hide()
         return continueButton
 
-    def resetModuleButton(self):
-        resetButton = QPushButton('Reset Module')
-        resetButton.setToolTip('Resets entire program')
-        resetButton.clicked.connect(self.resetModule)
-        resetButton.setEnabled(False)
-        resetButton.setFont(self.font12)
-        self.setButtonSize(resetButton)
-        return resetButton
+    def restartModuleButton(self):
+        restartButton = QPushButton('Restart Module')
+        restartButton.setToolTip('Restarts entire program')
+        restartButton.clicked.connect(self.restartModule)
+        restartButton.setFont(self.font12)
+        self.setButtonSize(restartButton)
+        return restartButton
 
     def informationLabel(self, text):
         info = QLabel()
@@ -238,9 +237,14 @@ class MainWindow(QWidget):
         self.log('Test Continued')
         self.measure.isPaused = False
 
-    def resetModule(self):
-        pass
-
+    def restartModule(self):
+        confirmRestart = QMessageBox.question(self, 'Confirm Restart', 'Are you sure you want to restart the module? All unsaved data will be lost.',
+                                            QMessageBox.Yes | QMessageBox.No)
+        if confirmRestart == QMessageBox.Yes:
+            python = sys.executable
+            os.execl(python, python, * sys.argv)
+        else:
+            pass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
