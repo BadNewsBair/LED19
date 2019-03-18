@@ -2,8 +2,7 @@ import sys
 import time
 
 class Measurement():
-    isPaused = False
-    isComplete = False    
+    isPaused = False   
 
     def __init__(self, mainlog):
         super().__init__()
@@ -18,8 +17,7 @@ class Measurement():
                 self.logger('Iteration %s' % iteration)
                 time.sleep(0.1)
                 iteration += 1
-        self.isComplete = True
-
+                
 class MotorControl():
     def __init__(self, mainlog):
         self.logger = mainlog

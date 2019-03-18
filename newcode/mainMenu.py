@@ -1,6 +1,7 @@
 import sys
 import time
 import threading
+from multiprocessing.pool import ThreadPool
 from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
 from PyQt5.QtCore import QDateTime, Qt, QTimer
@@ -53,7 +54,7 @@ class MainWindow(QWidget):
         self.startButton = self.startTestButton()
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
-        self.saveButton = self.saveDataButton()
+        self.resetButton = self.resetModuleButton()
         self.endInfo = self.informationLabel('Please refer to the following link for a walkthrough tutorial and\ninstruction manual *******link********')
         
         layout = QGridLayout()
@@ -69,7 +70,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.startButton, 7, 0, 1, 2)
         layout.addWidget(self.pauseButton, 8, 0, 1, 2)
         layout.addWidget(self.continueButton, 9, 0, 1, 2)
-        layout.addWidget(self.saveButton, 10, 0, 1, 2)
+        layout.addWidget(self.resetButton, 10, 0, 1, 2)
         layout.addWidget(self.endInfo, 11, 0, 1, 2)
         self.LeftGroup.setLayout(layout)
 
@@ -134,14 +135,14 @@ class MainWindow(QWidget):
         continueButton.hide()
         return continueButton
 
-    def saveDataButton(self):
-        saveButton = QPushButton('Save Data')
-        saveButton.setToolTip('Save Data to File')
-        saveButton.clicked.connect(self.saveData)
-        saveButton.setEnabled(False)
-        saveButton.setFont(self.font12)
-        self.setButtonSize(saveButton)
-        return saveButton
+    def resetModuleButton(self):
+        resetButton = QPushButton('Reset Module')
+        resetButton.setToolTip('Resets entire program')
+        resetButton.clicked.connect(self.resetModule)
+        resetButton.setEnabled(False)
+        resetButton.setFont(self.font12)
+        self.setButtonSize(resetButton)
+        return resetButton
 
     def informationLabel(self, text):
         info = QLabel()
@@ -209,7 +210,6 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
-        self.measure.isComplete = False
         self.thread = threading.Thread(target = self.measure.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
@@ -226,9 +226,6 @@ class MainWindow(QWidget):
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
 
-        if self.measure.isComplete:
-            self.log('Test Complete')
-
     def pauseTest(self):
         self.pauseButton.hide()
         self.continueButton.show()
@@ -241,8 +238,9 @@ class MainWindow(QWidget):
         self.log('Test Continued')
         self.measure.isPaused = False
 
-    def saveData(self):
+    def resetModule(self):
         pass
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
