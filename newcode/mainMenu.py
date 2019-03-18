@@ -48,7 +48,7 @@ class MainWindow(QWidget):
         self.initInfo = self.informationLabel('Prior to test start all controls must return to their home position.\n'
                                             'To accomplish this use the Initialize Controls button.\n'
                                             'Once a test is started, all input fields will be disabled and their inputs will be saved.\n'
-                                            'The test will not be able to start if any field is left blank or an improper data type is used.')
+                                            'The test will not be able to start if a data  field is left blank or an improper data type is used.')
         self.fileName = self.fileNameInput()
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
@@ -61,7 +61,7 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.restartButton = self.restartModuleButton()
-        self.endInfo = self.informationLabel('For additional setup and operational support, refer to the following link: ' + text)
+        self.endInfo = self.informationLabel('For additional support, refer to the instruction manual at the following link: ' + text)
         self.endInfo.setOpenExternalLinks(True)
         
         
@@ -227,7 +227,6 @@ class MainWindow(QWidget):
         fileName = str(self.fileName.text())
         if fileName == '':
             fileName = str(datetime.datetime.now())
-        print(fileName)
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
