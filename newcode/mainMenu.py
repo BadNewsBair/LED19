@@ -209,6 +209,7 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
+        self.measure.isComplete = False
         self.thread = threading.Thread(target = self.measure.beginTest)
         try: 
             userWattage = float(self.wattage.text())  
@@ -222,9 +223,11 @@ class MainWindow(QWidget):
             self.log('Test Starting')
             self.thread.daemon = True
             self.thread.start()
-
         except ValueError:
             self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
+
+        if self.measure.isComplete:
+            self.log('Test Complete')
 
     def pauseTest(self):
         self.pauseButton.hide()

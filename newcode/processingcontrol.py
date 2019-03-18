@@ -3,26 +3,22 @@ import time
 
 class Measurement():
     isPaused = False
+    isComplete = False    
 
     def __init__(self, mainlog):
         super().__init__()
         self.logger = mainlog
-
+        
     def beginTest(self):
         iteration = 1
-        while iteration < 200:
+        while iteration < 100:
             if self.isPaused:
                 pass
             else:
                 self.logger('Iteration %s' % iteration)
                 time.sleep(0.1)
                 iteration += 1
-
-    def pauseTest(self, pauseToggle):
-        self.pause = pauseToggle
-        while self.pause:
-            time.sleep(.1)
-            break
+        self.isComplete = True
 
 class MotorControl():
     def __init__(self, mainlog):
