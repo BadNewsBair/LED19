@@ -4,7 +4,7 @@ import time
 import threading
 from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
-from PyQt5.QtCore import QDateTime, Qt, QTimer
+from PyQt5.QtCore import QDateTime, QDir, Qt, QTimer, QUrl 
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
         QMessageBox, QPushButton, QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
@@ -22,7 +22,8 @@ class MainWindow(QWidget):
         self.black = QColor(0, 0, 0)
         self.font12 = QFont()
         self.font12.setPointSize(12)
-
+        #TODO: Make path to instruction manual generic
+        self.instructionManual = QDir.home().filePath(r'C:\Users\chris\Documents\GitHub\LED19\newcode\InstructionManual.docx')
         self.createLeftGroup()
         self.createRightGroup()
 
@@ -55,7 +56,11 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.restartButton = self.restartModuleButton()
-        self.endInfo = self.informationLabel('Please refer to the following link for a walkthrough tutorial and\ninstruction manual *******link********')
+        url = bytearray(QUrl.fromLocalFile(self.instructionManual).toEncoded()).decode()
+        text = '<a href={}>InstructionManual </a>'.format(url)
+        self.endInfo = self.informationLabel('For additional setup and operational support, refer to the following link: ' + text)
+        self.endInfo.setOpenExternalLinks(True)
+        
         
         layout = QGridLayout()
         layout.addWidget(logoLabel, 1, 0)
