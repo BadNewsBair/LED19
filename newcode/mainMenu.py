@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import datetime
 import threading
 from processingcontrol import Measurement, MotorControl
 from PyQt5.QtGui import QColor, QPixmap, QFont, QIcon, QTextCursor
@@ -22,8 +23,6 @@ class MainWindow(QWidget):
         self.black = QColor(0, 0, 0)
         self.font12 = QFont()
         self.font12.setPointSize(12)
-        #TODO: Make path to instruction manual generic
-        self.instructionManual = QDir.home().filePath(r'C:\Users\chris\Documents\GitHub\LED19\newcode\InstructionManual.docx')
         self.createLeftGroup()
         self.createRightGroup()
 
@@ -35,16 +34,22 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.measure = Measurement(self.log)
         self.motor = MotorControl(self.log)
 
     def createLeftGroup(self):
+        manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
+        self.instructionManual = QDir.home().filePath(manualPath)
+        url = bytearray(QUrl.fromLocalFile(self.instructionManual).toEncoded()).decode()
+        text = '<a href={}>InstructionManual </a>'.format(url)
         self.LeftGroup = QGroupBox('LED Test Module')
         simplyLogo = QPixmap('simplyleds.png')
         logoLabel = QLabel(self)
         logoLabel.setPixmap(simplyLogo)
         self.initInfo = self.informationLabel('Prior to test start all controls must return to their home position.\n'
-                                             'To accomplish this use the Initialize Controls button.')
+                                            'To accomplish this use the Initialize Controls button.\n'
+                                            'Once a test is started, all input fields will be disabled and their inputs will be saved.\n'
+                                            'The test will not be able to start if any field is left blank or an improper data type is used.')
+        self.fileName = self.fileNameInput()
         self.initButton = self.initializeButton()
         self.comboLabel = self.comboBoxLabel()
         self.combo = self.comboBox()
@@ -56,8 +61,6 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.restartButton = self.restartModuleButton()
-        url = bytearray(QUrl.fromLocalFile(self.instructionManual).toEncoded()).decode()
-        text = '<a href={}>InstructionManual </a>'.format(url)
         self.endInfo = self.informationLabel('For additional setup and operational support, refer to the following link: ' + text)
         self.endInfo.setOpenExternalLinks(True)
         
@@ -65,18 +68,19 @@ class MainWindow(QWidget):
         layout = QGridLayout()
         layout.addWidget(logoLabel, 1, 0)
         layout.addWidget(self.initInfo, 2, 0, 1, 2)
-        layout.addWidget(self.initButton, 3, 0, 1, 2)
-        layout.addWidget(self.comboLabel, 4, 1)
-        layout.addWidget(self.combo, 4, 0, 1, 1)
-        layout.addWidget(self.wattage, 5, 0, 1, 1)
-        layout.addWidget(self.wattLabel, 5, 1)
-        layout.addWidget(self.distance, 6, 0, 1, 1)
-        layout.addWidget(self.disLabel, 6, 1)
-        layout.addWidget(self.startButton, 7, 0, 1, 2)
-        layout.addWidget(self.pauseButton, 8, 0, 1, 2)
-        layout.addWidget(self.continueButton, 9, 0, 1, 2)
-        layout.addWidget(self.restartButton, 10, 0, 1, 2)
-        layout.addWidget(self.endInfo, 11, 0, 1, 2)
+        layout.addWidget(self.fileName, 3, 0, 1, 2)
+        layout.addWidget(self.initButton, 4, 0, 1, 2)
+        layout.addWidget(self.comboLabel, 5, 1)
+        layout.addWidget(self.combo, 5, 0, 1, 1)
+        layout.addWidget(self.wattage, 6, 0, 1, 1)
+        layout.addWidget(self.wattLabel, 6, 1)
+        layout.addWidget(self.distance, 7, 0, 1, 1)
+        layout.addWidget(self.disLabel, 7, 1)
+        layout.addWidget(self.startButton, 8, 0, 1, 2)
+        layout.addWidget(self.pauseButton, 9, 0, 1, 2)
+        layout.addWidget(self.continueButton, 10, 0, 1, 2)
+        layout.addWidget(self.restartButton, 11, 0, 1, 2)
+        layout.addWidget(self.endInfo, 12, 0, 1, 2)
         self.LeftGroup.setLayout(layout)
 
     def createRightGroup(self):
@@ -175,6 +179,12 @@ class MainWindow(QWidget):
         inputText.setFont(self.font12)
         return inputText
 
+    def fileNameInput(self):
+        name = QLineEdit(self)
+        name.setPlaceholderText('Input name to save file as')
+        name.setFont(self.font12)
+        return name
+
     def distanceLabel(self):
         distanceLabel = QLabel()
         #TODO: Fix distance measurement, Meters or Feet
@@ -214,10 +224,15 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
-        self.thread = threading.Thread(target = self.measure.beginTest)
+        fileName = str(self.fileName.text())
+        if fileName == '':
+            fileName = str(datetime.datetime.now())
+        print(fileName)
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
+            self.measure = Measurement(self.log, userWattage, userDistance, fileName)
+            self.thread = threading.Thread(target = self.measure.beginTest)
             self.wattage.setDisabled(True)
             self.distance.setDisabled(True) 
             self.initButton.setDisabled(True)
