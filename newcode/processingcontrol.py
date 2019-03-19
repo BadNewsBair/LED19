@@ -32,7 +32,7 @@ class MotorControl():
 
     def checkConnection(self):
         #TODO: Fix, boolean return is for testing purposes
-        self.log('Test connection')
+        self.log('Testing connection')
         return True
 
     def lowerMotor(self, direction):
