@@ -60,7 +60,6 @@ class MainWindow(QWidget):
         self.endInfo = self.informationLabel('For additional support, refer to the manual at the following link: ' + text)
         self.endInfo.setOpenExternalLinks(True)
         
-        
         layout = QGridLayout()
         layout.addWidget(self.logoLabel, 1, 0)
         layout.addWidget(self.initInfo, 2, 0, 1, 2)
@@ -86,7 +85,7 @@ class MainWindow(QWidget):
         return logoLabel
 
     def instructionManual(self):
-        manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
+        manualPath = os.path.dirname(os.path.realpath(__file__)) + r'\InstructionManual.docx'
         instructionManual = QDir.home().filePath(manualPath)
         url = bytearray(QUrl.fromLocalFile(instructionManual).toEncoded()).decode()
         text = '<a href={}>Instruction Manual</a>'.format(url)
@@ -233,12 +232,14 @@ class MainWindow(QWidget):
             
     def startTest(self):
         fileName = str(self.fileName.text())
+        testType = int(self.combo.currentData())
+        print(testType)
         if fileName == '':
             fileName = str(datetime.datetime.now())
         try: 
             userWattage = float(self.wattage.text())  
             userDistance = float(self.distance.text())
-            self.measure = Measurement(self.log, userWattage, userDistance, fileName)
+            self.measure = Measurement(self.log, userWattage, userDistance, fileName, testType)
             self.thread = threading.Thread(target = self.measure.beginTest)
             self.wattage.setDisabled(True)
             self.distance.setDisabled(True) 
