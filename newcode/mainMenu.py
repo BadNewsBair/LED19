@@ -215,9 +215,8 @@ class MainWindow(QWidget):
         self.mainLabel.hide()
         self.textOutput.show()
         self.log('Checking Connections and Zeroizing Controls')
-        
-        initialize = True
-        connection = True
+        connection = self.motor.checkConnection()
+        initialize = self.motor.initializeControls()
         if initialize and connection:
             self.startButton.setEnabled(True)
         else:
