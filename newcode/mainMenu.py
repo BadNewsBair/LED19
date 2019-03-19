@@ -83,8 +83,7 @@ class MainWindow(QWidget):
     def instructionManual(self):
         manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
         instructionManual = QDir.home().filePath(manualPath)
-        url = bytearray(QUrl.fromLocalFile(
-        instructionManual).toEncoded()).decode()
+        url = bytearray(QUrl.fromLocalFile(instructionManual).toEncoded()).decode()
         text = '<a href={}>Instruction Manual</a>'.format(url)
         return text
 
