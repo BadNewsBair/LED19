@@ -82,19 +82,19 @@ class Data():
     
 # This is for testing purposes only at the moment
 def main():
+    test_data = Data()
     if Data.am_i_using_a_csv == True:
         try:
-            test_data = Data()
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
             data_df, num_rows = test_data.data_csv(Data.test_csv, last_measured_angle=90)
             
         except:
             print('Something is wrong with the csv')
             exit()
-        average = test_data.data_average(data_df)
-        steradains_df, summed_total_steradains = test_data.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
-        data_frame = test_data.lumens(steradains_df)
-        print(data_frame)
+    average = test_data.data_average(data_df)
+    steradains_df, summed_total_steradains = test_data.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
+    data_frame = test_data.lumens(steradains_df)
+    print(data_frame)
         
 
 main()
