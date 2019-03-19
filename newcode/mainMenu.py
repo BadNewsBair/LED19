@@ -39,7 +39,7 @@ class MainWindow(QWidget):
     def createLeftGroup(self):
         text = self.instructionManual()
         self.LeftGroup = QGroupBox('LED Test Module')
-        
+
         self.logoLabel = self.logoImage()
         self.initInfo = self.informationLabel('Prior to test start all controls must return to their home position.\n'
                                             'To accomplish this use the Initialize Controls button.\n'
@@ -81,9 +81,9 @@ class MainWindow(QWidget):
 
     def logoImage(self):
         simplyLogo = QPixmap('simplyleds.png')
-        self.logoLabel = QLabel(self)
-        self.logoLabel.setPixmap(simplyLogo)
-        return self.logoLabel
+        logoLabel = QLabel(self)
+        logoLabel.setPixmap(simplyLogo)
+        return logoLabel
 
     def instructionManual(self):
         manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
