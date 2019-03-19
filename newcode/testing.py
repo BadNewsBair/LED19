@@ -65,7 +65,6 @@ class Data():
         data = data_df.append(steradians_values, ignore_index = True)
         return(data , total_steradians)
 
-
     def lumens(self,data):           
         lumens_values = []
         lumens_values.append('Lumens')
@@ -77,9 +76,14 @@ class Data():
             total_lumens += Average_Row * Steradains_Row
         lumens_values = pd.Series(dict(zip(data.columns, lumens_values)))
         data = data.append(lumens_values, ignore_index = True)
-        return(data.round(3))
-
+        return(data)
     
+    def all_calculations(self, data_df, rho_theta_data):
+        average = self.data_average(data_df)
+        steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
+        data_frame = self.lumens(steradains_df)
+        print(data_frame)
+        
 # This is for testing purposes only at the moment
 def main():
     test_data = Data()
@@ -87,14 +91,11 @@ def main():
         try:
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
             data_df, num_rows = test_data.data_csv(Data.test_csv, last_measured_angle=90)
-            
         except:
             print('Something is wrong with the csv')
             exit()
-    average = test_data.data_average(data_df)
-    steradains_df, summed_total_steradains = test_data.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
-    data_frame = test_data.lumens(steradains_df)
-    print(data_frame)
+
+    test_data.all_calculations(data_df, rho_theta_data)
         
 
 main()
