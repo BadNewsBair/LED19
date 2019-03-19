@@ -37,10 +37,7 @@ class MainWindow(QWidget):
         self.motor = MotorControl(self.log)
 
     def createLeftGroup(self):
-        manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
-        self.instructionManual = QDir.home().filePath(manualPath)
-        url = bytearray(QUrl.fromLocalFile(self.instructionManual).toEncoded()).decode()
-        text = '<a href={}>InstructionManual </a>'.format(url)
+        text = self.instructionManual()
         self.LeftGroup = QGroupBox('LED Test Module')
         simplyLogo = QPixmap('simplyleds.png')
         logoLabel = QLabel(self)
@@ -61,7 +58,7 @@ class MainWindow(QWidget):
         self.pauseButton = self.pauseTestButton()
         self.continueButton = self.continueTestButton()
         self.restartButton = self.restartModuleButton()
-        self.endInfo = self.informationLabel('For additional support, refer to the instruction manual at the following link: ' + text)
+        self.endInfo = self.informationLabel('For additional support, refer to the manual at the following link: ' + text)
         self.endInfo.setOpenExternalLinks(True)
         
         
@@ -82,6 +79,14 @@ class MainWindow(QWidget):
         layout.addWidget(self.restartButton, 11, 0, 1, 2)
         layout.addWidget(self.endInfo, 12, 0, 1, 2)
         self.LeftGroup.setLayout(layout)
+
+    def instructionManual(self):
+        manualPath = os.path.dirname(os.path.realpath(__file__)) + '\InstructionManual.docx'
+        instructionManual = QDir.home().filePath(manualPath)
+        url = bytearray(QUrl.fromLocalFile(
+        instructionManual).toEncoded()).decode()
+        text = '<a href={}>Instruction Manual</a>'.format(url)
+        return text
 
     def createRightGroup(self):
         self.RightGroup = QGroupBox()
