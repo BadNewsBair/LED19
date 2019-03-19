@@ -233,7 +233,6 @@ class MainWindow(QWidget):
     def startTest(self):
         fileName = str(self.fileName.text())
         testType = int(self.combo.currentData())
-        print(testType)
         if fileName == '':
             fileName = str(datetime.datetime.now())
         try: 
