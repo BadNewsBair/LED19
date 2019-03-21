@@ -51,7 +51,7 @@ class MainWindow(QWidget):
         self.combo = self.comboBox()
         self.wattLabel = self.wattageLabel()
         self.wattage = self.wattageInput()
-        self.disLabel = self.distanceLabel()
+        self.disCombo = self.distanceCombo()
         self.distance = self.distanceInput()
         self.startButton = self.startTestButton()
         self.pauseButton = self.pauseTestButton()
@@ -70,7 +70,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.wattage, 6, 0, 1, 1)
         layout.addWidget(self.wattLabel, 6, 1)
         layout.addWidget(self.distance, 7, 0, 1, 1)
-        layout.addWidget(self.disLabel, 7, 1)
+        layout.addWidget(self.disCombo, 7, 1)
         layout.addWidget(self.startButton, 8, 0, 1, 2)
         layout.addWidget(self.pauseButton, 9, 0, 1, 2)
         layout.addWidget(self.continueButton, 10, 0, 1, 2)
@@ -193,18 +193,29 @@ class MainWindow(QWidget):
         name.setFont(self.font12)
         return name
 
-    def distanceLabel(self):
-        distanceLabel = QLabel()
-        #TODO: Fix distance measurement, Meters or Feet
-        distanceLabel.setText('Feet ')
-        distanceLabel.setFont(self.font12)
-        return distanceLabel
+    def distanceCombo(self):
+        comboDis = QComboBox()
+        comboDis.setFont(self.font12)
+        comboDis.addItem('Feet', 1)
+        comboDis.addItem('Meters', 2)
+        return comboDis
 
     def distanceInput(self):
         distance = QLineEdit(self)
         distance.setPlaceholderText('Input Distance')
         distance.setFont(self.font12)
         return distance
+
+    def convertMetric(self, feet):
+        meters = feet/3.2808
+        return meters
+
+    def units(self):
+        if self.disCombo.currentData() == 1:
+            unit = 'Feet'
+        elif self.disCombo.currentData() == 2:
+            unit = 'Meters'
+        return unit
 
     def log(self, output):
         self.textOutput.append(output)
@@ -231,14 +242,20 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
+        distanceUnits = self.units()
         fileName = str(self.fileName.text())
         testType = int(self.combo.currentData())
         if fileName == '':
             fileName = str(datetime.datetime.now())
         try: 
+            distance = float(self.distance.text())
             userWattage = float(self.wattage.text())  
-            userDistance = float(self.distance.text())
-            self.measure = Measurement(self.log, userWattage, userDistance, fileName, testType)
+            self.log('--User Inputs--')
+            self.log('File Name: %s' % fileName)
+            self.log('Test Type: %s' % self.combo.currentText())
+            self.log('Distance: %s %s' % (str(distance), distanceUnits))
+            self.log('Wattage: %s Watts' % str(userWattage))
+            self.measure = Measurement(self.log, userWattage, distance, distanceUnits, fileName, testType)
             self.thread = threading.Thread(target = self.measure.beginTest)
             self.wattage.setDisabled(True)
             self.distance.setDisabled(True) 
