@@ -30,7 +30,7 @@ class Data():
             data = pd.read_excel('Lumen Calculator IES.xlsx',header= None,skiprows= 17)
             data = data.drop(data.columns[[-2,-1]], axis =1)
             data = data.head(data_rows)
-            return data, data_rows
+            return data
         except :
             print('This didnt work idiot')
 
@@ -83,14 +83,23 @@ class Data():
         steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
         data_frame = self.lumens(steradains_df)
         print(data_frame)
-        
+
+    def get_data_from_csv(self,csv_file):
+        print(csv_file)
+        print('i made it here')
+        rho_theta_data = self.read_rho_theta_csv(csv_file)
+        #data_df, num_rows = self.data_csv(csv_file, last_measured_angle=90)
+        #return(rho_theta_data, data_df)
+
+
 # This is for testing purposes only at the moment
 def main():
     test_data = Data()
     if Data.am_i_using_a_csv == True:
         try:
+            #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
-            data_df, num_rows = test_data.data_csv(Data.test_csv, last_measured_angle=90)
+            data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
         except:
             print('Something is wrong with the csv')
             exit()
