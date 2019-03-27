@@ -21,7 +21,10 @@ class Measurement():
             else:
                 self.log('Iteration %s' % iteration)
                 time.sleep(0.1)
-                iteration += 1
+                iteration += 1 
+        self.log('Test Complete')
+        while True:
+            pass
                 
 class MotorControl():
     def __init__(self, mainlog):
