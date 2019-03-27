@@ -23,7 +23,9 @@ class Measurement():
                 time.sleep(0.1)
                 iteration += 1 
         self.log('Test Complete')
-        while True:
+        
+        #This While loop is necessary to keep the second thread active, otherwise it will cause a segmentation fault
+        while True: 
             pass
                 
 class MotorControl():
