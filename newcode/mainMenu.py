@@ -17,7 +17,7 @@ class MainWindow(QWidget):
         self.setWindowTitle('Simply LEDs')
         self.left = 100
         self.top = 100
-        self.width = 1000
+        self.width = 800
         self.height = 800
         self.red = QColor(255, 0, 0)
         self.black = QColor(0, 0, 0)
@@ -34,8 +34,8 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         
         ## Set either Maximized or parameters
-        self.showMaximized()
-        # self.setGeometry(self.left, self.top, self.width, self.height)
+        ## self.showMaximized()
+        self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.motor = MotorControl(self.log)
 
@@ -94,7 +94,7 @@ class MainWindow(QWidget):
         return logoLabel
 
     def instructionManual(self):
-        manualPath = os.path.dirname(os.path.realpath(__file__)) + r'\InstructionManual.docx'
+        manualPath = os.path.dirname(os.path.realpath(__file__)) + r'/InstructionManual.docx'
         instructionManual = QDir.home().filePath(manualPath)
         url = bytearray(QUrl.fromLocalFile(instructionManual).toEncoded()).decode()
         text = '<a href={}>Instruction Manual</a>'.format(url)
