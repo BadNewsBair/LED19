@@ -80,40 +80,42 @@ class Data():
         steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
         data_frame = self.lumens(steradains_df)
         #print(data_frame)
-        return(data_frame)
+        #return(data_frame.to_numpy())
+        return(data_frame.round(3))
 
-    def create_file(self):
+    def create_file(self, file_name = 'some_file_name.IES'):
+        
         try:
-            file = open('some_file_name.IES','x')
+            file = open(file_name,'x')
         except:
             print('Writing overtop previous saved data in file ....')
-            file = open('some_file_name.IES','w')
+            file = open(file_name,'w')
 
         #header for the .ies file
-        file.write('IESNA: \t LM-63-2002\n') # need to check if theese needs to be changed
-        file.write('[TEST] \t L101803601\n') # need to check how test number changes
-        file.write('[TESTLAB] \t Light \t LABORATORY INC \t (www.lightlaboratory.com) \n') #does this change?
-        file.write('[ISSUEDATE] \t 10/25/2018 \n') #need to make this change with current date
-        file.write('[MANUFAC] \t SIMPLY \t LEDS,LLC \n')
-        file.write('[LUMCAT] \t FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
-        file.write('[LUMINAIRE] \t ROADWAY \t AND \t AREA \t LUMINAIRE \t W/ \t CLEAR \t LENS \n')
-        file.write('[BALLASTCAT] \t INVENTRONICS \t EUD-150S350DTA \n') #nned to check if this value changes
-        file.write('[OTHER] \t INDICATING \t THE \t CANDELA \t VALUES \t ARE \t ABSOLUTE \t AND \n')
-        file.write('[MORE] \t SHOULD \t NOT \t BE \t FACTORED \t FOR \t DIFFERENT \t LAMP \t RATINGS \n')
-        file.write('[INPUT] \t 119.97 VAC \t 108.31W \n') # Where do these values come from
-        file.write('[TEST \t PROCEDURE] \t IESNA:LM-79-08 \n')
+        file.write('IESNA: LM-63-2002\n') # need to check if theese needs to be changed
+        file.write('[TEST] L101803601\n') # need to check how test number changes
+        file.write('[TESTLAB] Light LABORATORY INC (www.lightlaboratory.com) \n') #does this change?
+        file.write('[ISSUEDATE] 10/25/2018 \n') #need to make this change with current date
+        file.write('[MANUFAC] SIMPLY LEDS,LLC \n')
+        file.write('[LUMCAT] FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
+        file.write('[LUMINAIRE] ROADWAY AND AREA LUMINAIRE W/ CLEAR LENS \n')
+        file.write('[BALLASTCAT] INVENTRONICS EUD-150S350DTA \n') #nned to check if this value changes
+        file.write('[OTHER] INDICATING THE CANDELA VALUES ARE ABSOLUTE AND \n')
+        file.write('[MORE] SHOULD NOT BE FACTORED FOR DIFFERENT LAMP RATINGS \n')
+        file.write('[INPUT] 119.97 VAC 108.31W \n') # Where do these values come from
+        file.write('[TEST PROCEDURE] IESNA:LM-79-08 \n')
         file.write('TILT = NONE\n')
         file.write('I Dont Know where these numbers come from \n')
         file.write('I Dont Know where these numbers come from \n')
-
-        return(file)
+        file_name = file_name.split('.')[0]
+        return(file_name)
 
 # This is for testing purposes only at the moment
 def main():
     warnings.filterwarnings('ignore')
     test_data = Data()
     
-    file = test_data.create_file()
+    file_name = test_data.create_file()
     
     if Data.am_i_using_a_csv == True:
         try:
@@ -124,10 +126,10 @@ def main():
             print('Something is wrong with the csv file')
             exit()
 
-    data_frame = test_data.all_calculations(data_df, rho_theta_data)
-    file.write(str(data_frame))
-    file.close()
+    data_array = test_data.all_calculations(data_df, rho_theta_data)
+    #print(file_name)
+    with open(file_name +'.IES', 'ab') as f:
+        np.savetxt(f, data_array.values, fmt = '%s')
     
-
 
 main()
