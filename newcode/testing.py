@@ -4,11 +4,14 @@ import numpy as np
 import pandas as pd
 import warnings
 import RPi.GPIO as GPIO
+import datetime
 
 # --------------------------------------------------------
 class Data():
     test_csv =  'Lumen Calculator IES.xlsx'
     am_i_using_a_csv = True
+    date = datetime.datetime.now()
+    
     def __init__(self):
         None
         #self.am_i_using_a_csv = True
@@ -80,8 +83,6 @@ class Data():
         average = self.data_average(data_df)
         steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
         data_frame = self.lumens(steradains_df)
-        #print(data_frame)
-        #return(data_frame.to_numpy())
         return(data_frame.round(3))
 
     def create_file(self, file_name = 'some_file_name.IES'):
@@ -96,7 +97,7 @@ class Data():
         file.write('IESNA: LM-63-2002\n') # need to check if theese needs to be changed
         file.write('[TEST] L101803601\n') # need to check how test number changes
         file.write('[TESTLAB] Light LABORATORY INC (www.lightlaboratory.com) \n') #does this change?
-        file.write('[ISSUEDATE] 10/25/2018 \n') #need to make this change with current date
+        file.write('[ISSUEDATE] ' +str(self.date.strftime("%x"))+ ' \n') #is issue date the same as current date?
         file.write('[MANUFAC] SIMPLY LEDS,LLC \n')
         file.write('[LUMCAT] FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
         file.write('[LUMINAIRE] ROADWAY AND AREA LUMINAIRE W/ CLEAR LENS \n')
@@ -111,7 +112,7 @@ class Data():
         file_name = file_name.split('.')[0]
         return(file_name)
 
-    def set_up_pi():
+    def set_up_pi(self):
         GPIO.setmode(GPIO.BCM)
 
         #assign GPIO numbers
@@ -148,8 +149,10 @@ class Data():
 
 # This is for testing purposes only at the moment
 def main():
+    #supresses warning mainly from pandas 
     warnings.filterwarnings('ignore')
     test_data = Data()
+
     
     file_name = test_data.create_file()
     
@@ -161,11 +164,17 @@ def main():
         except:
             print('Something is wrong with the csv file')
             exit()
-
+    else:
+        test_data.set_up_pi()
+        
+    test_data.set_up_pi()
     data_array = test_data.all_calculations(data_df, rho_theta_data)
-    #print(file_name)
+
+    # appends the data to the file
     with open(file_name +'.IES', 'ab') as f:
         np.savetxt(f, data_array.values, fmt = '%s')
+
+    exit()
     
 
 main()
