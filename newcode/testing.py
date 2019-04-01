@@ -90,13 +90,14 @@ class Data():
         try:
             file = open(file_name,'x')
         except:
+            #probably need a pop up window to prompt user about overwritting 
             print('Writing overtop previous saved data in file ....')
             file = open(file_name,'w')
 
         #header for the .ies file
         file.write('IESNA: LM-63-2002\n') # need to check if theese needs to be changed
         file.write('[TEST] L101803601\n') # need to check how test number changes
-        file.write('[TESTLAB] Light LABORATORY INC (www.lightlaboratory.com) \n') #does this change?
+        file.write('[TESTLAB] LIGHT LABORATORY INC (www.lightlaboratory.com) \n') #does this change?
         file.write('[ISSUEDATE] ' +str(self.date.strftime("%x"))+ ' \n') #is issue date the same as current date?
         file.write('[MANUFAC] SIMPLY LEDS,LLC \n')
         file.write('[LUMCAT] FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
@@ -145,7 +146,20 @@ class Data():
         GPIO.setup(gnd_2,GPIO.OUT,initial=GPIO.LOW)
         GPIO.setup(gnd_3,GPIO.OUT,initial=GPIO.LOW)
         GPIO.setup(gnd_4,GPIO.OUT,initial=GPIO.LOW)
+
+    def theta_rotation(self):
         
+        if test == Type_5:
+            theta_header = np.arange(0,95,5,dtype='int')
+            print('0-90 5 degree incremenets')
+        elif test == Type_3 or Type_4:
+            theta_header = np.arange(0,185,5,dtype='int')
+            print('0-180 5 degree increments')
+        else:
+            theta_header = np.arange(0,360,5,dtype='int')
+            print('0-355 5 degree increments')
+            
+        return(theta_header)
 
 # This is for testing purposes only at the moment
 def main():
@@ -166,8 +180,11 @@ def main():
             exit()
     else:
         test_data.set_up_pi()
-        
+
+    #this will need to be deleted     
     test_data.set_up_pi()
+
+    
     data_array = test_data.all_calculations(data_df, rho_theta_data)
 
     # appends the data to the file
