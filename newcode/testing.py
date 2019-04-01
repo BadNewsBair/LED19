@@ -79,7 +79,7 @@ class Data():
         average = self.data_average(data_df)
         steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
         data_frame = self.lumens(steradains_df)
-        print(data_frame)
+        #print(data_frame)
         return(data_frame)
 
     def create_file(self):
@@ -100,7 +100,7 @@ class Data():
         file.write('[BALLASTCAT] \t INVENTRONICS \t EUD-150S350DTA \n') #nned to check if this value changes
         file.write('[OTHER] \t INDICATING \t THE \t CANDELA \t VALUES \t ARE \t ABSOLUTE \t AND \n')
         file.write('[MORE] \t SHOULD \t NOT \t BE \t FACTORED \t FOR \t DIFFERENT \t LAMP \t RATINGS \n')
-        file.write('[INPUT] \t 119.97 VAC \t 108.31W') # Where do these values come from
+        file.write('[INPUT] \t 119.97 VAC \t 108.31W \n') # Where do these values come from
         file.write('[TEST \t PROCEDURE] \t IESNA:LM-79-08 \n')
         file.write('TILT = NONE\n')
         file.write('I Dont Know where these numbers come from \n')
@@ -125,7 +125,7 @@ def main():
             exit()
 
     data_frame = test_data.all_calculations(data_df, rho_theta_data)
-    #file.write(data_frame)
+    file.write(str(data_frame))
     file.close()
     
 
