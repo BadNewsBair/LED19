@@ -3,6 +3,7 @@ import numpy as np
 # will be able to get rid of this later 
 import csv
 import pandas as pd
+import warnings
 # --------------------------------------------------------
 class Data():
     test_csv =  'Lumen Calculator IES.xlsx'
@@ -13,26 +14,22 @@ class Data():
         #self.test_csv = 'Lumen Calculator IES.xlsx'
         # will this work for every csv??
     def read_rho_theta_csv(self,csv_file = test_csv):
-        try:
-            rho_theta = pd.read_excel(csv_file,header= None,skiprows= 15)
-            #deletes the last 2 columns since they are nans.....probably dont need this when creating our own
-            rho_theta = rho_theta.drop(rho_theta.columns[[-2,-1]], axis =1)
-            rho_theta = rho_theta.head(2)
+        rho_theta = pd.read_excel(csv_file,header= None,skiprows= 15)
+        #deletes the last 2 columns since they are nans.....probably dont need this when creating our own
+        rho_theta = rho_theta.drop(rho_theta.columns[[-2,-1]], axis =1)
+        rho_theta = rho_theta.head(2)
 
-            return rho_theta
-        except:
-            print('This didnt work idiot')
+        return rho_theta
+
 
     def data_csv(self,csv_file = test_csv, last_measured_angle=0):
         #need to change this to make more universal
         data_rows = int(last_measured_angle / 5 + 1)
-        try:
-            data = pd.read_excel('Lumen Calculator IES.xlsx',header= None,skiprows= 17)
-            data = data.drop(data.columns[[-2,-1]], axis =1)
-            data = data.head(data_rows)
-            return data
-        except :
-            print('This didnt work idiot')
+        data = pd.read_excel('Lumen Calculator IES.xlsx',header= None,skiprows= 17)
+        data = data.drop(data.columns[[-2,-1]], axis =1)
+        data = data.head(data_rows)
+        return data
+
 
     def data_average(self,data_frame=None):
         data_rows = data_frame.shape[0]
@@ -83,28 +80,54 @@ class Data():
         steradains_df, summed_total_steradains = self.steradains_df(Rho_Theta_df=rho_theta_data ,data_df=average)
         data_frame = self.lumens(steradains_df)
         print(data_frame)
+        return(data_frame)
 
-    def get_data_from_csv(self,csv_file):
-        print(csv_file)
-        print('i made it here')
-        rho_theta_data = self.read_rho_theta_csv(csv_file)
-        #data_df, num_rows = self.data_csv(csv_file, last_measured_angle=90)
-        #return(rho_theta_data, data_df)
+    def create_file(self):
+        try:
+            file = open('some_file_name.IES','x')
+        except:
+            print('Writing overtop previous saved data in file ....')
+            file = open('some_file_name.IES','w')
 
+        #header for the .ies file
+        file.write('IESNA: \t LM-63-2002\n') # need to check if theese needs to be changed
+        file.write('[TEST] \t L101803601\n') # need to check how test number changes
+        file.write('[TESTLAB] \t Light \t LABORATORY INC \t (www.lightlaboratory.com) \n') #does this change?
+        file.write('[ISSUEDATE] \t 10/25/2018 \n') #need to make this change with current date
+        file.write('[MANUFAC] \t SIMPLY \t LEDS,LLC \n')
+        file.write('[LUMCAT] \t FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
+        file.write('[LUMINAIRE] \t ROADWAY \t AND \t AREA \t LUMINAIRE \t W/ \t CLEAR \t LENS \n')
+        file.write('[BALLASTCAT] \t INVENTRONICS \t EUD-150S350DTA \n') #nned to check if this value changes
+        file.write('[OTHER] \t INDICATING \t THE \t CANDELA \t VALUES \t ARE \t ABSOLUTE \t AND \n')
+        file.write('[MORE] \t SHOULD \t NOT \t BE \t FACTORED \t FOR \t DIFFERENT \t LAMP \t RATINGS \n')
+        file.write('[INPUT] \t 119.97 VAC \t 108.31W') # Where do these values come from
+        file.write('[TEST \t PROCEDURE] \t IESNA:LM-79-08 \n')
+        file.write('TILT = NONE\n')
+        file.write('I Dont Know where these numbers come from \n')
+        file.write('I Dont Know where these numbers come from \n')
+
+        return(file)
 
 # This is for testing purposes only at the moment
 def main():
+    warnings.filterwarnings('ignore')
     test_data = Data()
+    
+    file = test_data.create_file()
+    
     if Data.am_i_using_a_csv == True:
         try:
             #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
             data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
         except:
-            print('Something is wrong with the csv')
+            print('Something is wrong with the csv file')
             exit()
 
-    test_data.all_calculations(data_df, rho_theta_data)
-        
+    data_frame = test_data.all_calculations(data_df, rho_theta_data)
+    #file.write(data_frame)
+    file.close()
+    
+
 
 main()
