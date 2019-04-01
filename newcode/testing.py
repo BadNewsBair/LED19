@@ -1,9 +1,10 @@
 import math
 import numpy as np
 # will be able to get rid of this later 
-import csv
 import pandas as pd
 import warnings
+import RPi.GPIO as GPIO
+
 # --------------------------------------------------------
 class Data():
     test_csv =  'Lumen Calculator IES.xlsx'
@@ -109,6 +110,41 @@ class Data():
         file.write('I Dont Know where these numbers come from \n')
         file_name = file_name.split('.')[0]
         return(file_name)
+
+    def set_up_pi():
+        GPIO.setmode(GPIO.BCM)
+
+        #assign GPIO numbers
+        v_limit = 22
+        hr_limit = 27
+        hl_limit = 17
+        h_pulse = 6
+        h_dir = 13
+        v_pulse = 19
+        v_dir = 26
+
+        gnd_1 = 12
+        gnd_2 = 16
+        gnd_3 = 20
+        gnd_4 = 21
+
+        # set up outputs
+        GPIO.setup(h_pulse, GPIO.OUT)
+        GPIO.setup(h_dir, GPIO.OUT)
+        GPIO.setup(v_pulse, GPIO.OUT)
+        GPIO.setup(v_dir, GPIO.OUT)
+
+        # set inputs pulled down
+        GPIO.setup(v_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
+        GPIO.setup(hr_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
+        GPIO.setup(hl_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
+
+        # set up ground
+        GPIO.setup(gnd_1,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(gnd_2,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(gnd_3,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(gnd_4,GPIO.OUT,initial=GPIO.LOW)
+        
 
 # This is for testing purposes only at the moment
 def main():
