@@ -95,18 +95,18 @@ class Data():
             file = open(file_name,'w')
 
         #header for the .ies file
-        file.write('IESNA: LM-63-2002\n') # need to check if theese needs to be changed
-        file.write('[TEST] L101803601\n') # need to check how test number changes
-        file.write('[TESTLAB] LIGHT LABORATORY INC (www.lightlaboratory.com) \n') #does this change?
-        file.write('[ISSUEDATE] ' +str(self.date.strftime("%x"))+ ' \n') #is issue date the same as current date?
+        file.write('IESNA: LM-63-2002\n') 
+        file.write('[TEST] L101803601\n') # allow for a user to input a test number
+        file.write('[TESTLAB] SIMPLY LEDS, LLC (www.simplyleds.com) \n') 
+        file.write('[ISSUEDATE] ' +str(self.date.strftime("%x"))+ ' \n')
         file.write('[MANUFAC] SIMPLY LEDS,LLC \n')
-        file.write('[LUMCAT] FLDRS-110W-XV-40K-T5-CL \n')# does this need to be changed ever?
+        file.write('[LUMCAT] FLDRS-110W-XV-40K-T5-CL \n')# allow for a user to input a partnumber
         file.write('[LUMINAIRE] ROADWAY AND AREA LUMINAIRE W/ CLEAR LENS \n')
-        file.write('[BALLASTCAT] INVENTRONICS EUD-150S350DTA \n') #nned to check if this value changes
+        file.write('[BALLASTCAT] INVENTRONICS EUD-150S350DTA \n') #allow for a user to input the number
         file.write('[OTHER] INDICATING THE CANDELA VALUES ARE ABSOLUTE AND \n')
         file.write('[MORE] SHOULD NOT BE FACTORED FOR DIFFERENT LAMP RATINGS \n')
-        file.write('[INPUT] 119.97 VAC 108.31W \n') # Where do these values come from
-        file.write('[TEST PROCEDURE] IESNA:LM-79-08 \n')
+        file.write('[INPUT] 119.97 VAC 108.31W \n') 
+        file.write('[TEST PROCEDURE] IESNA:LM-79-08 \n') #can be test angle range 
         file.write('TILT = NONE\n')
         file.write('I Dont Know where these numbers come from \n')
         file.write('I Dont Know where these numbers come from \n')
