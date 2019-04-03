@@ -4,14 +4,16 @@ import time
 class Measurement():
     isPaused = False   
 
-    def __init__(self, mainlog, wattage, distance, distanceUnit, fileName, testType):
+    def __init__(self, mainlog, wattage, distance, fileName, testType, testNumber, deviceNumber, driverNumber):
         super().__init__()
         self.log = mainlog
         self.wattage = wattage
-        self.distance = distanceUnit
-        self.distanceUnit = distanceUnit
+        self.distance = distance
         self.fileName = fileName
         self.testType = testType
+        self.testNumber = testNumber
+        self.deviceNumber = deviceNumber
+        self.driverNumber = driverNumber
         
     def beginTest(self):
         iteration = 1

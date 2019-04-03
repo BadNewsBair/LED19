@@ -46,12 +46,15 @@ class MainWindow(QWidget):
                                             'Once a test is started, all input fields will be disabled and their inputs will be saved.\n'
                                             'The test will not be able to start if a data  field is left blank or an improper data type is used.')
         self.fileName = self.fileNameInput()
+        self.testLine = self.testNumberInput()
+        self.devicePartNumber = self.partNumberInput()
+        self.driverPartNumber = self.driverPartNumberInput()
         self.initButton = self.initializeButton()
-        self.comboLabel = self.comboBoxLabel()
-        self.combo = self.comboBox()
+        self.typeComboLabel = self.comboBoxLabel()
+        self.typeCombo = self.typeComboBox()
         self.wattLabel = self.wattageLabel()
         self.wattage = self.wattageInput()
-        self.disCombo = self.distanceCombo()
+        self.distanceCombo = self.disCombo()
         self.distance = self.distanceInput()
         self.startButton = self.startTestButton()
         self.pauseButton = self.pauseTestButton()
@@ -61,21 +64,24 @@ class MainWindow(QWidget):
         self.endInfo.setOpenExternalLinks(True)
         
         layout = QGridLayout()
-        layout.addWidget(self.logoLabel, 1, 0)
+        layout.addWidget(self.logoLabel, 1, 0)       
         layout.addWidget(self.initInfo, 2, 0, 1, 2)
-        layout.addWidget(self.fileName, 3, 0, 1, 2)
-        layout.addWidget(self.initButton, 4, 0, 1, 2)
-        layout.addWidget(self.comboLabel, 5, 1)
-        layout.addWidget(self.combo, 5, 0, 1, 1)
-        layout.addWidget(self.wattage, 6, 0, 1, 1)
-        layout.addWidget(self.wattLabel, 6, 1)
-        layout.addWidget(self.distance, 7, 0, 1, 1)
-        layout.addWidget(self.disCombo, 7, 1)
-        layout.addWidget(self.startButton, 8, 0, 1, 2)
-        layout.addWidget(self.pauseButton, 9, 0, 1, 2)
-        layout.addWidget(self.continueButton, 10, 0, 1, 2)
-        layout.addWidget(self.restartButton, 11, 0, 1, 2)
-        layout.addWidget(self.endInfo, 12, 0, 1, 2)
+        layout.addWidget(self.initButton, 3, 0, 1, 2)
+        layout.addWidget(self.fileName, 4, 0, 1, 2)
+        layout.addWidget(self.testLine, 5, 0, 1, 2)
+        layout.addWidget(self.devicePartNumber, 6, 0, 1, 2)
+        layout.addWidget(self.driverPartNumber, 7, 0 , 1, 2)        
+        layout.addWidget(self.typeComboLabel, 8, 1)
+        layout.addWidget(self.typeCombo, 8, 0, 1, 1)
+        layout.addWidget(self.wattage, 9, 0, 1, 1)
+        layout.addWidget(self.wattLabel, 9, 1)
+        layout.addWidget(self.distance, 10, 0, 1, 1)
+        layout.addWidget(self.distanceCombo, 10, 1)
+        layout.addWidget(self.startButton, 11, 0, 1, 2)
+        layout.addWidget(self.pauseButton, 12, 0, 1, 2)
+        layout.addWidget(self.continueButton, 13, 0, 1, 2)
+        layout.addWidget(self.restartButton, 14, 0, 1, 2)
+        layout.addWidget(self.endInfo, 15, 0, 1, 2)
         self.LeftGroup.setLayout(layout)
 
     def logoImage(self):
@@ -104,17 +110,18 @@ class MainWindow(QWidget):
         self.RightGroup.setLayout(layout)
 
     def comboBoxLabel(self):
-        comboLabel = QLabel()
-        comboLabel.setText('Test Mode')
-        comboLabel.setFont(self.font12)
-        return comboLabel
+        typecomboLabel = QLabel()
+        typecomboLabel.setText('Test Mode')
+        typecomboLabel.setFont(self.font12)
+        return typecomboLabel
 
-    def comboBox(self):
+    def typeComboBox(self):
         combo = QComboBox()
         combo.setFont(self.font12)
-        combo.addItem('Test 1', 1)
-        combo.addItem('Test 2', 2)
-        combo.addItem('Test 3', 3)
+        combo.addItem('Single Measurement', 1)
+        combo.addItem('Type 3 - ', 3)
+        combo.addItem('Type 4 - ', 4)
+        combo.addItem('Type 5 - ', 5)
         return combo
 
     def initializeButton(self):
@@ -189,11 +196,29 @@ class MainWindow(QWidget):
 
     def fileNameInput(self):
         name = QLineEdit(self)
-        name.setPlaceholderText('Input name to save file as')
+        name.setPlaceholderText('IESNA/Input name to save file as')
         name.setFont(self.font12)
         return name
+    
+    def testNumberInput(self):
+        num = QLineEdit(self)
+        num.setPlaceholderText('Input Test Number')
+        num.setFont(self.font12)
+        return num
 
-    def distanceCombo(self):
+    def partNumberInput(self):
+        num = QLineEdit(self)
+        num.setPlaceholderText('LumCat/Input Device Part Number')
+        num.setFont(self.font12)
+        return num
+
+    def driverPartNumberInput(self):
+        num = QLineEdit(self)
+        num.setPlaceholderText('BallastCat/Input Driver Part Number')
+        num.setFont(self.font12)
+        return num
+
+    def disCombo(self):
         comboDis = QComboBox()
         comboDis.setFont(self.font12)
         comboDis.addItem('Feet', 1)
@@ -211,9 +236,9 @@ class MainWindow(QWidget):
         return meters
 
     def units(self):
-        if self.disCombo.currentData() == 1:
+        if self.distanceCombo.currentData() == 1:
             unit = 'Feet'
-        elif self.disCombo.currentData() == 2:
+        elif self.distanceCombo.currentData() == 2:
             unit = 'Meters'
         return unit
 
@@ -225,6 +250,39 @@ class MainWindow(QWidget):
         self.textOutput.setTextColor(self.red)
         self.textOutput.append(output)
         self.textOutput.setTextColor(self.black)
+
+    def getFileName(self):
+        fileName = str(self.fileName.text())
+        if fileName == '':
+            fileName = str(datetime.datetime.now())
+        return fileName
+        
+    def getDistance(self):
+        try:
+            distance = float(self.distance.text())
+            if self.distanceCombo.currentData() == 1:
+                distance = round(self.convertMetric(distance), 2)
+            return distance
+        except ValueError:
+            self.errorLog('Unable to Start Test: Check Input Distance Value-Must be able to convert to float')
+
+    def getWattage(self):
+        try:
+            return float(self.wattage.text())
+        except ValueError:
+            self.errorLog('Unable to Start Test: Check Input Wattage Value-Must be able to conver to float')
+
+    def getTestNumber(self):
+        return str(self.testLine.text())
+
+    def getDeviceNumber(self):
+        return str(self.devicePartNumber.text())
+
+    def getDriverNumber(self):
+        return str(self.driverPartNumber.text())
+
+    def getTestType(self):
+        return int(self.typeCombo.currentData())
 
     def setButtonSize(self, button):
         button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -242,32 +300,32 @@ class MainWindow(QWidget):
             self.errorLog('Initialization Failed. Check connections and try again')
             
     def startTest(self):
-        distanceUnits = self.units()
-        fileName = str(self.fileName.text())
-        testType = int(self.combo.currentData())
-        if fileName == '':
-            fileName = str(datetime.datetime.now())
-        try: 
-            distance = float(self.distance.text())
-            userWattage = float(self.wattage.text())  
+        fileName = self.getFileName()
+        testType = self.getTestType()
+        testNumber = self.getTestNumber()
+        deviceNumber = self.getDeviceNumber()
+        driverNumber = self.getDriverNumber()
+        distance = self.getDistance()
+        wattage = self.getWattage()
+        
+
+        if distance and wattage != None:
             self.log('--User Inputs--')
             self.log('File Name: %s' % fileName)
-            self.log('Test Type: %s' % self.combo.currentText())
-            self.log('Distance: %s %s' % (str(distance), distanceUnits))
-            self.log('Wattage: %s Watts' % str(userWattage))
-            self.measure = Measurement(self.log, userWattage, distance, distanceUnits, fileName, testType)
+            self.log('Test Type: %s' % self.typeCombo.currentText())
+            self.log('Distance: %s Meters' % distance)
+            self.log('Wattage: %s Watts' % wattage)
+            self.measure = Measurement(self.log, wattage, distance, fileName, testType, testNumber, deviceNumber, driverNumber)
             self.thread = threading.Thread(target = self.measure.beginTest)
             self.wattage.setDisabled(True)
             self.distance.setDisabled(True) 
             self.initButton.setDisabled(True)
             self.pauseButton.setDisabled(False)
             self.startButton.setDisabled(True)
-            self.combo.setDisabled(True)
+            self.typeCombo.setDisabled(True)
             self.log('Test Starting')
             self.thread.daemon = True
             self.thread.start()
-        except ValueError:
-            self.errorLog('Unable to Start Test: Check Input Values-Must be able to convert to float')
 
     def pauseTest(self):
         self.pauseButton.hide()
