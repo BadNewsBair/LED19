@@ -9,7 +9,7 @@ import datetime
 # --------------------------------------------------------
 class Data():
     test_csv =  'Lumen Calculator IES.xlsx'
-    am_i_using_a_csv = True
+    am_i_using_a_csv = False
     date = datetime.datetime.now()
     
     def __init__(self):
@@ -147,18 +147,37 @@ class Data():
         GPIO.setup(gnd_3,GPIO.OUT,initial=GPIO.LOW)
         GPIO.setup(gnd_4,GPIO.OUT,initial=GPIO.LOW)
 
-    def theta_rotation(self):
-        
-        if test == Type_5:
-            theta_header = np.arange(0,95,5,dtype='int')
+    def theta_rotation(self, test=None):
+        if test == str('Type_5'):
+            rho_line = np.arange(-5,95,5,dtype='int')
             print('0-90 5 degree incremenets')
-        elif test == Type_3 or Type_4:
-            theta_header = np.arange(0,185,5,dtype='int')
+        elif test == str('Type_3') or test == str('Type_4'):
+            rho_line = np.arange(-5,185,5,dtype='int')
             print('0-180 5 degree increments')
         else:
-            theta_header = np.arange(0,360,5,dtype='int')
+            rho_line = np.arange(-5,360,5,dtype='int')
             print('0-355 5 degree increments')
-            
+
+        #convert to list to add Rho and back to numpy array   
+        rho_line = list(rho_line)
+        rho_line[0] = 'Rho'
+        rho_line = np.asarray(rho_line)
+        
+        #second row of theta/rho
+        theta_line = np.zeros(rho_line.shape[0])
+        theta_line = theta_line.astype('float')
+        theta_line[theta_line == 0] = np.nan
+        
+        theta_line = list(theta_line)
+        theta_line[0]='Theta'
+        theta_line= np.asarray(theta_line)
+
+        #combines the two
+        theta_header = np.stack((rho_line, theta_line))
+        print(theta_header)
+        
+
+        #need to make a data frame before i can return it 
         return(theta_header)
 
 # This is for testing purposes only at the moment
@@ -175,20 +194,26 @@ def main():
             #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
             data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
+            
         except:
             print('Something is wrong with the csv file')
             exit()
     else:
         test_data.set_up_pi()
+        rho_theta_data = test_data.theta_rotation('Type_5')
+ 
+        
 
     #this will need to be deleted     
     test_data.set_up_pi()
+    rho_theta_data = rho_theta_data.fillna(' ')
 
-    
     data_array = test_data.all_calculations(data_df, rho_theta_data)
+    data_array = data_array.fillna(0)
 
     # appends the data to the file
     with open(file_name +'.IES', 'ab') as f:
+        np.savetxt(f, rho_theta_data.values, fmt = '%s')
         np.savetxt(f, data_array.values, fmt = '%s')
 
     exit()
