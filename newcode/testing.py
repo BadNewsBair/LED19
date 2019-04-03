@@ -174,10 +174,10 @@ class Data():
 
         #combines the two
         theta_header = np.stack((rho_line, theta_line))
-        print(theta_header)
         
+        # turn into panda data frame 
+        theta_header = pd.DataFrame(data= theta_header)
 
-        #need to make a data frame before i can return it 
         return(theta_header)
 
 # This is for testing purposes only at the moment
@@ -193,6 +193,7 @@ def main():
         try:
             #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
             rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
+            print(rho_theta_data)
             data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
             
         except:
