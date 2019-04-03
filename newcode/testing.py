@@ -180,6 +180,18 @@ class Data():
 
         return(theta_header)
 
+    def data_collect(self)
+
+            #create empty array
+
+            #column 0, 0-90 by 5s
+
+            # collect/store data
+
+            #turn numpy array to data_frame
+            
+        return(data_df)
+
 # This is for testing purposes only at the moment
 def main():
     #supresses warning mainly from pandas 
@@ -192,7 +204,7 @@ def main():
     if Data.am_i_using_a_csv == True:
         try:
             #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
-            rho_theta_data = test_data.read_rho_theta_csv(Data.test_csv)
+            rho_theta_df = test_data.read_rho_theta_csv(Data.test_csv)
             print(rho_theta_data)
             data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
             
@@ -201,7 +213,8 @@ def main():
             exit()
     else:
         test_data.set_up_pi()
-        rho_theta_data = test_data.theta_rotation('Type_5')
+        rho_theta_df = test_data.theta_rotation('Type_5')
+        data_df = test_data.data_collect()
  
         
 
