@@ -307,7 +307,6 @@ class MainWindow(QWidget):
         driverNumber = self.getDriverNumber()
         distance = self.getDistance()
         wattage = self.getWattage()
-        
 
         if distance and wattage != None:
             self.log('--User Inputs--')
