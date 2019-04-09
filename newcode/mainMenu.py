@@ -32,7 +32,10 @@ class MainWindow(QWidget):
         mainLayout.setColumnStretch(1, 1)
         mainLayout.setRowStretch(1, 1)
         self.setLayout(mainLayout)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        
+        ## Set either Maximized or parameters
+        self.showMaximized()
+        # self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.motor = MotorControl(self.log)
 
