@@ -15,7 +15,7 @@ class MainWindow(QWidget):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
         self.setWindowTitle('Simply LEDs')
-        self.left = 200
+        self.left = 100
         self.top = 100
         self.width = 1000
         self.height = 800
@@ -32,7 +32,10 @@ class MainWindow(QWidget):
         mainLayout.setColumnStretch(1, 1)
         mainLayout.setRowStretch(1, 1)
         self.setLayout(mainLayout)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        
+        ## Set either Maximized or parameters
+        self.showMaximized()
+        # self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.motor = MotorControl(self.log)
 
