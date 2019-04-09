@@ -3,14 +3,47 @@ import numpy as np
 # will be able to get rid of this later 
 import pandas as pd
 import warnings
-import RPi.GPIO as GPIO
 import datetime
+import smbus2
+import time
 
 # --------------------------------------------------------
 class Data():
     test_csv =  'Lumen Calculator IES.xlsx'
     am_i_using_a_csv = False
     date = datetime.datetime.now()
+
+    DEVICE     = 0x23 # Default device I2C address
+
+    POWER_DOWN = 0x00 # No active state
+    POWER_ON   = 0x01 # Power on
+    RESET      = 0x07 # Reset data register value
+
+    # Start measurement at 4lx resolution. Time typically 16ms.
+    CONTINUOUS_LOW_RES_MODE = 0x13
+    
+    # Start measurement at 1lx resolution. Time typically 120ms
+    CONTINUOUS_HIGH_RES_MODE_1 = 0x10
+    
+    # Start measurement at 0.5lx resolution. Time typically 120ms
+    CONTINUOUS_HIGH_RES_MODE_2 = 0x11
+    
+    # Start measurement at 1lx resolution. Time typically 120ms
+    # Device is automatically set to Power Down after measurement.
+    ONE_TIME_HIGH_RES_MODE_1 = 0x20
+    
+    # Start measurement at 0.5lx resolution. Time typically 120ms
+    # Device is automatically set to Power Down after measurement.
+    ONE_TIME_HIGH_RES_MODE_2 = 0x21
+    
+    # Start measurement at 1lx resolution. Time typically 120ms
+    # Device is automatically set to Power Down after measurement.
+    ONE_TIME_LOW_RES_MODE = 0x23
+
+    #bus = smbus.SMBus(0) # Rev 1 Pi uses 0
+     # Rev 2 Pi uses 1
+
+    delay = .120
     
     def __init__(self):
         None
@@ -108,45 +141,12 @@ class Data():
         file.write('[INPUT] 119.97 VAC 108.31W \n') 
         file.write('[TEST PROCEDURE] IESNA:LM-79-08 \n') #can be test angle range 
         file.write('TILT = NONE\n')
-        file.write('I Dont Know where these numbers come from \n')
-        file.write('I Dont Know where these numbers come from \n')
+#        file.write("1 -1 "+ str(lux_candela_ratio)+" 19 37 1 1 1 0 0\n")
+#        file.write("1 1 "+str(wattage)+"\n")
         file_name = file_name.split('.')[0]
         return(file_name)
 
-    def set_up_pi(self):
-        GPIO.setmode(GPIO.BCM)
-
-        #assign GPIO numbers
-        v_limit = 22
-        hr_limit = 27
-        hl_limit = 17
-        h_pulse = 6
-        h_dir = 13
-        v_pulse = 19
-        v_dir = 26
-
-        gnd_1 = 12
-        gnd_2 = 16
-        gnd_3 = 20
-        gnd_4 = 21
-
-        # set up outputs
-        GPIO.setup(h_pulse, GPIO.OUT)
-        GPIO.setup(h_dir, GPIO.OUT)
-        GPIO.setup(v_pulse, GPIO.OUT)
-        GPIO.setup(v_dir, GPIO.OUT)
-
-        # set inputs pulled down
-        GPIO.setup(v_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
-        GPIO.setup(hr_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
-        GPIO.setup(hl_limit, GPIO.OUT, initial = GPIO.PUD_DOWN)
-
-        # set up ground
-        GPIO.setup(gnd_1,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(gnd_2,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(gnd_3,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(gnd_4,GPIO.OUT,initial=GPIO.LOW)
-
+    
     def theta_rotation(self, test=None):
         if test == str('Type_5'):
             rho_line = np.arange(-5,95,5,dtype='int')
@@ -179,18 +179,43 @@ class Data():
         theta_header = pd.DataFrame(data= theta_header)
 
         return(theta_header)
+    def convertToNumber(self, data):
+        # Simple function to convert 2 bytes of data
+        # into a decimal number. Optional parameter 'decimals'
+        # will round to specified number of decimal places.
+        result=(data[1] + (256 * data[0])) / 1.
+        return (result)
 
-    def data_collect(self)
+    def read_light(self):
+        # Read data from I2C interface
+        bus = smbus2.SMBus(1)
+        ONE_TIME_HIGH_RES_MODE_1 = 0x20
+  
+        data = bus.read_i2c_block_data(0x23,ONE_TIME_HIGH_RES_MODE_1,4)
+        
+        return self.convertToNumber(data)
 
-            #create empty array
+    def data_collect(self, header_length):
 
-            #column 0, 0-90 by 5s
-
-            # collect/store data
-
-            #turn numpy array to data_frame
-            
-        return(data_df)
+        #column 0, 0-90 by 5s
+        column_degrees = np.arange(0,95,5,dtype='int')
+        column_degrees = np.array([column_degrees])
+        column_degrees = column_degrees.T
+        #create empty array
+        data_array = np.zeros((column_degrees.size,header_length))
+        # collect/store data
+        for x in range(0, column_degrees.size,1):
+            for y in range(0,header_length,1):
+                self.read_light()
+                time.sleep(self.delay)
+                light_level = self.read_light()
+                data_array[x][y] = int(light_level)
+                time.sleep(self.delay)
+        #combine column array and data array
+        data_array = np.concatenate((column_degrees, data_array), axis =1)
+        #turn numpy array to data_frame
+        data_array = pd.DataFrame(data= data_array)  
+        return(data_array)
 
 # This is for testing purposes only at the moment
 def main():
@@ -205,24 +230,23 @@ def main():
         try:
             #rho_theta_data, data_df = test_data.get_data_from_csv(Data.test_csv)
             rho_theta_df = test_data.read_rho_theta_csv(Data.test_csv)
-            print(rho_theta_data)
             data_df = test_data.data_csv(Data.test_csv, last_measured_angle=90)
             
         except:
             print('Something is wrong with the csv file')
             exit()
     else:
-        test_data.set_up_pi()
         rho_theta_df = test_data.theta_rotation('Type_5')
-        data_df = test_data.data_collect()
- 
+        data_df = test_data.data_collect(rho_theta_df.shape[1]-1)
+        print(data_df)
+        print('Rho_theta_df size',rho_theta_df.shape)
+        print('data_df size', data_df.shape)
+        data_df = pd.concat([rho_theta_df,data_df], ignore_index = True)
         
-
-    #this will need to be deleted     
-    test_data.set_up_pi()
-    rho_theta_data = rho_theta_data.fillna(' ')
-
-    data_array = test_data.all_calculations(data_df, rho_theta_data)
+   
+    #rho_theta_data = rho_theta_data.fillna(' ')
+    print(data_df)
+    data_array = test_data.all_calculations(data_df, rho_theta_df)
     data_array = data_array.fillna(0)
 
     # appends the data to the file
