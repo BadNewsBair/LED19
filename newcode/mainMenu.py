@@ -15,7 +15,7 @@ class MainWindow(QWidget):
         super(MainWindow, self).__init__(parent)
         self.setWindowIcon(QIcon('icon.png'))
         self.setWindowTitle('Simply LEDs')
-        self.left = 200
+        self.left = 100
         self.top = 100
         self.width = 1000
         self.height = 800
