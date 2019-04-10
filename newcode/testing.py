@@ -1,3 +1,4 @@
+from bh1750 import BH1750
 import math
 import numpy as np
 # will be able to get rid of this later 
@@ -13,37 +14,7 @@ class Data():
     am_i_using_a_csv = False
     date = datetime.datetime.now()
 
-    DEVICE     = 0x23 # Default device I2C address
-
-    POWER_DOWN = 0x00 # No active state
-    POWER_ON   = 0x01 # Power on
-    RESET      = 0x07 # Reset data register value
-
-    # Start measurement at 4lx resolution. Time typically 16ms.
-    CONTINUOUS_LOW_RES_MODE = 0x13
-    
-    # Start measurement at 1lx resolution. Time typically 120ms
-    CONTINUOUS_HIGH_RES_MODE_1 = 0x10
-    
-    # Start measurement at 0.5lx resolution. Time typically 120ms
-    CONTINUOUS_HIGH_RES_MODE_2 = 0x11
-    
-    # Start measurement at 1lx resolution. Time typically 120ms
-    # Device is automatically set to Power Down after measurement.
-    ONE_TIME_HIGH_RES_MODE_1 = 0x20
-    
-    # Start measurement at 0.5lx resolution. Time typically 120ms
-    # Device is automatically set to Power Down after measurement.
-    ONE_TIME_HIGH_RES_MODE_2 = 0x21
-    
-    # Start measurement at 1lx resolution. Time typically 120ms
-    # Device is automatically set to Power Down after measurement.
-    ONE_TIME_LOW_RES_MODE = 0x23
-
-    #bus = smbus.SMBus(0) # Rev 1 Pi uses 0
-     # Rev 2 Pi uses 1
-
-    delay = .120
+    delay = .05
     
     def __init__(self):
         None
@@ -179,38 +150,30 @@ class Data():
         theta_header = pd.DataFrame(data= theta_header)
 
         return(theta_header)
-    def convertToNumber(self, data):
-        # Simple function to convert 2 bytes of data
-        # into a decimal number. Optional parameter 'decimals'
-        # will round to specified number of decimal places.
-        result=(data[1] + (256 * data[0])) / 1.
-        return (result)
-
-    def read_light(self):
-        # Read data from I2C interface
-        bus = smbus2.SMBus(1)
-        ONE_TIME_HIGH_RES_MODE_1 = 0x20
-  
-        data = bus.read_i2c_block_data(0x23,ONE_TIME_HIGH_RES_MODE_1,4)
-        
-        return self.convertToNumber(data)
 
     def data_collect(self, header_length):
-
         #column 0, 0-90 by 5s
         column_degrees = np.arange(0,95,5,dtype='int')
         column_degrees = np.array([column_degrees])
         column_degrees = column_degrees.T
         #create empty array
-        data_array = np.zeros((column_degrees.size,header_length))
+        #data_array = np.zeros((column_degrees.size,header_length))
+        data_array = np.zeros(column_degrees.size*header_length)
         # collect/store data
-        for x in range(0, column_degrees.size,1):
-            for y in range(0,header_length,1):
-                self.read_light()
-                time.sleep(self.delay)
-                light_level = self.read_light()
-                data_array[x][y] = int(light_level)
-                time.sleep(self.delay)
+        bus = smbus2.SMBus(1)
+        sensor = BH1750(bus)
+        
+        i=0
+        while data_array[i] < data_array.size:
+            print(sensor.measure_high_res2())
+            data_array[i] = float(sensor.measure_high_res2())
+            #data_array[i]=self.read_light()
+            i = i + 1
+            time.sleep(self.delay)
+            if (i == data_array.size):
+                break
+        #go from 1d array to 2d array 
+        data_array = np.resize(data_array,(column_degrees.size,header_length))
         #combine column array and data array
         data_array = np.concatenate((column_degrees, data_array), axis =1)
         #turn numpy array to data_frame
