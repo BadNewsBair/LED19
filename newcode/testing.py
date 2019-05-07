@@ -14,7 +14,7 @@ class Data():
     am_i_using_a_csv = False
     date = datetime.datetime.now()
 
-    delay = .05
+    delay = 0
     
     def __init__(self):
         None
@@ -208,13 +208,12 @@ def main():
         
    
     #rho_theta_data = rho_theta_data.fillna(' ')
-    print(data_df)
     data_array = test_data.all_calculations(data_df, rho_theta_df)
     data_array = data_array.fillna(0)
 
     # appends the data to the file
     with open(file_name +'.IES', 'ab') as f:
-        np.savetxt(f, rho_theta_data.values, fmt = '%s')
+        np.savetxt(f, rho_theta_df.values, fmt = '%s')
         np.savetxt(f, data_array.values, fmt = '%s')
 
     exit()
