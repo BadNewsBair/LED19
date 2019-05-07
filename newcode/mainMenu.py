@@ -34,8 +34,8 @@ class MainWindow(QWidget):
         self.setLayout(mainLayout)
         
         ## Set either Maximized or parameters
-        self.showMaximized()
-        # self.setGeometry(self.left, self.top, self.width, self.height)
+        # self.showMaximized()
+        self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.motor = MotorControl(self.log)
 
@@ -314,7 +314,7 @@ class MainWindow(QWidget):
         if distance and wattage != None:
             self.log('--User Inputs--')
             self.log('File Name: %s' % fileName)
-            self.log('Test Type: %s' % self.typeCombo.currentText())
+            self.log('Test Type: %s' % testType)
             self.log('Distance: %s Meters' % distance)
             self.log('Wattage: %s Watts' % wattage)
             self.measure = Measurement(self.log, wattage, distance, fileName, testType, testNumber, deviceNumber, driverNumber)
